@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmailPropertyDao extends PagingAndSortingRepository<EmailProperty, EmailPropertyId> {
 
-//    @Override
+//    @Overriøde
 //    public List<EmailProperty> getEmailPropertyListByEmailType(EmailType emailType) {
 //        final EmailType finalEmailType = checkNotNull(emailType);
 //        List<EmailProperty> propertyList = findList(

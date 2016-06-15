@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuthorityRoleDao extends CrudRepository<AuthorityRole, Long> {
 
-
 //    @Override
 //    public Set<AuthorityRole> findAuthoritiesByRole(final String... roles) {
 //        if (isEmpty(roles)) {

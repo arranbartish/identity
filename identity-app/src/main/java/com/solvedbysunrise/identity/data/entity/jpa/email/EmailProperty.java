@@ -1,5 +1,7 @@
 package com.solvedbysunrise.identity.data.entity.jpa.email;
 
+import com.solvedbysunrise.identity.data.entity.jpa.ReflectiveEntity;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -7,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "EMAIL_PROPERTY")
-public class EmailProperty {
+public class EmailProperty extends ReflectiveEntity{
 
     @EmbeddedId
     private EmailPropertyId emailPropertyId;
