@@ -1,0 +1,17 @@
+<div>
+    <h1>I wasted time</h1>
+    <form ng-submit="wastedTime.submitWastedTime()">
+        <label>Name (Alias)</label><input id="name" ng-model="name" name="name" type="text" required/>
+        <select ng-model="name" ng-options="timeWaster for timeWaster in timeWasters">
+        </select><br/>
+        <label>Activity</label><input id="activity" ng-model="activity" name="activity" type="text" required/>
+        <select ng-model="activity" ng-options="activity for activity in activities">
+        </select><br/>
+        <label>How Long?</label>
+        <select ng-model="duration" ng-options="timeSlice.display for timeSlice in timeSlices" required>
+        </select>
+        <br/>
+        <label>When?</label><input id="date" ng-model="date" name="date" type="date" required/><br/>
+        <input type="submit" value="Over it"/><br/>
+    </form>
+</div>
