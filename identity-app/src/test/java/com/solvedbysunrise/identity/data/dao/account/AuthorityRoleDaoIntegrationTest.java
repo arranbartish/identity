@@ -4,8 +4,8 @@ import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
 import com.solvedbysunrise.identity.data.entity.jpa.user.AuthorityRole;
-import com.solvedbysunrise.identity.data.entity.jpa.user.AuthorityRoleId;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -14,12 +14,22 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
+
 @Rollback
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {WastedtimeApplication.class, TestConfiguration.class})
 @IntegrationTest
-public class AuthorityRoleDaoIntegrationTest extends IntegrationTestForBasicDao<AuthorityRoleDao, AuthorityRole, AuthorityRoleId> {
+public class AuthorityRoleDaoIntegrationTest extends IntegrationTestForBasicDao<AuthorityRoleDao, AuthorityRole, Long> {
+
+    private static final String AUTH_LOOKUP = "AUTH_LOOKUP";
+    private static final String ROLE_LOOKUP = "ROLE_LOOKUP";
+    private static final String AUTH_CREATE = "AUTH_CREATE";
+    private static final String ROLE_CREATE = "ROLE_CREATE";
 
     @Autowired
     private AuthorityRoleDao authorityRoleDao;
@@ -30,21 +40,22 @@ public class AuthorityRoleDaoIntegrationTest extends IntegrationTestForBasicDao<
 
     @Before
     public void setup() {
-        AuthorityRoleId roleToCreateId = new AuthorityRoleId();
-        roleToCreateId.setAuthority("AUTH_CREATE");
-        roleToCreateId.setRole("ROLE_CREATE");
+        roleToCreate.setAuthority(AUTH_CREATE);
+        roleToCreate.setRole(ROLE_CREATE);
         roleToCreate.setIsActive(true);
-        roleToCreate.setAuthorityRoleId(roleToCreateId);
 
-        AuthorityRoleId roleToLookupId = new AuthorityRoleId();
-
-        roleToLookupId.setAuthority("AUTH_LOOKUP");
-        roleToLookupId.setRole("ROLE_LOOKUP");
+        roleToLookup.setAuthority(AUTH_LOOKUP);
+        roleToLookup.setRole(ROLE_LOOKUP);
         roleToLookup.setIsActive(true);
-        roleToLookup.setAuthorityRoleId(roleToCreateId);
 
         authorityRoleDao.save(roleToLookup);
 
+    }
+
+    @Test
+    public void findAuthoritiesByRole_will_return_authorities_by_role() throws Exception {
+        Set<AuthorityRole> authoritiesByRole = authorityRoleDao.findAuthoritiesByRole(ROLE_LOOKUP);
+        assertThat(authoritiesByRole, contains(roleToLookup));
     }
 
     @Override
@@ -68,7 +79,7 @@ public class AuthorityRoleDaoIntegrationTest extends IntegrationTestForBasicDao<
     }
 
     @Override
-    public AuthorityRoleId entityIdToLookup() {
-        return roleToLookup.getAuthorityRoleId();
+    public Long entityIdToLookup() {
+        return roleToLookup.getId();
     }
 }
