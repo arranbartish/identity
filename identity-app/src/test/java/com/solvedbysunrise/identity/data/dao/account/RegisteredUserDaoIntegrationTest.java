@@ -3,9 +3,12 @@ package com.solvedbysunrise.identity.data.dao.account;
 import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
+import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
 import com.solvedbysunrise.identity.data.entity.jpa.user.RegisteredUser;
+import org.hamcrest.CoreMatchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -16,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.solvedbysunrise.identity.data.entity.jpa.user.PhoneType.Mobile;
 import static java.util.Locale.CANADA_FRENCH;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @Rollback
 @Transactional
@@ -47,6 +52,12 @@ public class RegisteredUserDaoIntegrationTest extends IntegrationTestForBasicDao
         entityToLookup = new RegisteredUser();
         setValues(entityToLookup);
         registeredUserDao.save(entityToLookup);
+    }
+
+    @Test
+    public void findByPrimaryEmail_will_return_user_to_lookup() throws Exception {
+        RegisteredUser account = registeredUserDao.findByPrimaryEmail(entityToLookup.getPrimaryEmail());
+        assertThat(account, is(entityToLookup));
     }
 
     @Override

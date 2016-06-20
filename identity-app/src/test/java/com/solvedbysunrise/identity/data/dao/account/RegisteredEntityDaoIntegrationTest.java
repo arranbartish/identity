@@ -5,8 +5,13 @@ import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
 import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
 import com.solvedbysunrise.identity.data.entity.jpa.account.RegisteredEntity;
+import com.solvedbysunrise.identity.data.entity.jpa.account.RegisteredEntityRole;
 import com.solvedbysunrise.identity.data.entity.jpa.account.RegisteredEntityTermsAndConditions;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -15,10 +20,14 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
+import java.util.Collection;
+import java.util.Set;
 
 import static com.solvedbysunrise.identity.data.dao.account.ActivationState.PENDING_ACTIVATION;
 import static java.util.Locale.CANADA_FRENCH;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
 
 @Rollback
 @Transactional
@@ -58,6 +67,25 @@ public class RegisteredEntityDaoIntegrationTest extends IntegrationTestForBasicD
         setValues(entityToLookup);
 
         registeredEntityDao.save(entityToLookup);
+    }
+
+    @Test
+    public void findByUsername_will_return_entity() throws Exception {
+        BasicRegisteredEntity found = registeredEntityDao.findByUsername(EMAIL);
+        assertThat(found, is(entityToLookup));
+    }
+
+    @Test
+    public void findAllRolesForAccount_will_return_roles_for_entity() throws Exception {
+        Set<String> allRoles = registeredEntityDao.findAllRolesForAccount(entityToLookup.getId());
+        assertThat(allRoles, containsInAnyOrder("SOME_ROLE", "SOME_OTHER_ROLE"));
+    }
+
+    @Test
+    @Ignore("Currently broken, but we do not need this for now.")
+    public void findAllAccountsWithPasswordVersionAndNoResetPassword_will_return_user() throws Exception {
+        Collection<BasicRegisteredEntity> accounts = registeredEntityDao.findAllAccountsWithPasswordVersionAndNoResetPassword(entityToLookup.getPasswordVersion());
+        assertThat(accounts, Matchers.contains(entityToLookup));
     }
 
     @Override

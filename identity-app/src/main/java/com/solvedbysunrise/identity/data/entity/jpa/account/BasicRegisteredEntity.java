@@ -11,6 +11,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static com.solvedbysunrise.identity.data.entity.jpa.account.RegisteredEntity.REGISTERED_ENTITY_TABLE;
+import static org.hibernate.annotations.CascadeType.ALL;
 import static org.hibernate.annotations.CascadeType.SAVE_UPDATE;
 
 @Entity
@@ -18,12 +19,12 @@ import static org.hibernate.annotations.CascadeType.SAVE_UPDATE;
 public class BasicRegisteredEntity extends RegisteredEntity {
 
     @OneToMany(mappedBy = "registeredEntity")
-    @Cascade({SAVE_UPDATE})
+    @Cascade({ALL})
     @OrderBy("createDate")
     private Set<RegisteredEntityTermsAndConditions> termsAndConditions;
 
     @OneToMany(mappedBy = "registeredEntity")
-    @Cascade({SAVE_UPDATE})
+    @Cascade({ALL})
     @OrderBy("createDate")
     private Set<RegisteredEntityRole> roles;
 
