@@ -7,7 +7,12 @@ import org.springframework.stereotype.Repository;
 public interface ResetPasswordEmailDao extends
         EmailDao<ResetPasswordEmail> {
 
-//    final static Logger LOGGER = LoggerFactory.getLogger(ResetPasswordEmailDao.class);
+
+    ResetPasswordEmail findByGuid(String guid);
+
+    ResetPasswordEmail findByConfirmationId(String confirmationId);
+
+    //    final static Logger LOGGER = LoggerFactory.getLogger(ResetPasswordEmailDao.class);
 //
 //    private final List<ResetPasswordEmail> emptyList = newArrayList();
 //

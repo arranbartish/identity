@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,7 +15,9 @@ import javax.validation.Validator;
 
 @SpringBootApplication
 @EnableConfigurationProperties
+@EnableJpaAuditing
 @EnableAutoConfiguration
+@EnableTransactionManagement
 public class WastedtimeApplication {
 
 

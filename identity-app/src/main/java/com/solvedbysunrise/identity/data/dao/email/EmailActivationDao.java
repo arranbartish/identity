@@ -7,7 +7,11 @@ import org.springframework.stereotype.Repository;
 public interface EmailActivationDao extends
         EmailDao<ActivationEmail>{
 
-//    final static Logger LOGGER = LoggerFactory.getLogger(EmailActivationDao.class);
+    ActivationEmail findByGuid(String guid);
+
+    ActivationEmail findByConfirmationId(String confirmationId);
+
+    //    final static Logger LOGGER = LoggerFactory.getLogger(EmailActivationDao.class);
 //
 //    @Autowired
 //    public EmailActivationDao(SessionFactory sessionFactory) {

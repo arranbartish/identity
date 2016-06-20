@@ -2,8 +2,13 @@ package com.solvedbysunrise.identity.data.entity.jpa.email;
 
 
 import com.solvedbysunrise.identity.data.entity.jpa.ReflectiveEntity;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -11,6 +16,7 @@ import static com.solvedbysunrise.identity.internationalization.LocaleUtil.conve
 import static javax.persistence.GenerationType.IDENTITY;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class Email extends ReflectiveEntity {
 
     static final String EMAIL_TABLE = "EMAIL";
@@ -59,6 +65,14 @@ public abstract class Email extends ReflectiveEntity {
 
     @Column(name = COUNTRY_CODE, nullable = true, updatable = true)
     private String countryCode;
+
+    @Column(name = "CREATE_DATE", nullable = false, updatable = false)
+    @CreatedDate
+    private Calendar createDate;
+
+    @Column(name = "UPDATE_DATE")
+    @LastModifiedDate
+    private Calendar updateDate;
 
     public Long getId() {
         return id;
@@ -130,6 +144,22 @@ public abstract class Email extends ReflectiveEntity {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    public Calendar getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Calendar createDate) {
+        this.createDate = createDate;
+    }
+
+    public Calendar getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Calendar updateDate) {
+        this.updateDate = updateDate;
     }
 
     @Transient

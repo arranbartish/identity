@@ -1,12 +1,19 @@
 package com.solvedbysunrise.identity.data.dao.email;
 
 import com.solvedbysunrise.identity.data.entity.jpa.email.BasicEmail;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BasicEmailDao extends EmailDao<BasicEmail> {
 
+    BasicEmail findByGuid(String guid);
 
+    BasicEmail findByConfirmationId(String confirmationId);
+
+    //@Query("from BasicEmail be where be.sentDate is null and be.createDate <= :olderThanDate")
+    //BasicEmail findNumberOfUnsentEmailsOlderThanDate(Pageable pageable);
 //    @Override
 //    public List<BasicEmail> findNumberOfUnsentEmails(Integer numberOfEmailsToFind) {
 //        return findNumberOfUnsentEmailsOlderThanDate(numberOfEmailsToFind, null);

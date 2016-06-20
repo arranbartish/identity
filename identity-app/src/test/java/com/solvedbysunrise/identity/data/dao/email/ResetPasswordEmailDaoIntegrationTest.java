@@ -5,6 +5,7 @@ import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
 import com.solvedbysunrise.identity.data.entity.jpa.email.ResetPasswordEmail;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -14,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.RESET_PASSWORD;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @Rollback
 @Transactional
@@ -35,6 +38,18 @@ public class ResetPasswordEmailDaoIntegrationTest extends IntegrationTestForBasi
         setValues(entityToSave);
         setValues(entityToLookup);
         resetPasswordEmailDao.save(entityToLookup);
+    }
+
+    @Test
+    public void findByGuid_will_return_email() throws Exception {
+        ResetPasswordEmail email = resetPasswordEmailDao.findByGuid(entityToLookup.getGuid());
+        assertThat(email, is(entityToLookup));
+    }
+
+    @Test
+    public void findByConfirmationId_will_return_email() throws Exception {
+        ResetPasswordEmail email = resetPasswordEmailDao.findByConfirmationId(entityToLookup.getConfirmationId());
+        assertThat(email, is(entityToLookup));
     }
 
     @Override
