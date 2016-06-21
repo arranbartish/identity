@@ -52,6 +52,12 @@ public class EmailActivationDaoIntegrationTest extends IntegrationTestForBasicDa
         assertThat(email, is(entityToLookup));
     }
 
+    @Test
+    public void findByActivationGuid_will_return_email() throws Exception {
+        ActivationEmail email = emailActivationDao.findByActivationGuid(ACTIVATION_GUID);
+        assertThat(email, is(entityToLookup));
+    }
+
     @Override
     public EmailActivationDao getDao() {
         return emailActivationDao;

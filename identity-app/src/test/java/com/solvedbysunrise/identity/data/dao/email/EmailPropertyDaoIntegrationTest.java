@@ -4,9 +4,8 @@ import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
 import com.solvedbysunrise.identity.data.entity.jpa.email.EmailProperty;
-import com.solvedbysunrise.identity.data.entity.jpa.email.EmailPropertyId;
-import com.solvedbysunrise.identity.data.entity.jpa.email.EmailType;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
@@ -15,18 +14,23 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import java.util.Collection;
+
+import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.CONTACT_US;
+import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.RESET_PASSWORD;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 @Rollback
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {WastedtimeApplication.class, TestConfiguration.class})
 @IntegrationTest
-public class EmailPropertyDaoIntegrationTest extends IntegrationTestForBasicDao <EmailPropertyDao, EmailProperty, EmailPropertyId> {
+public class EmailPropertyDaoIntegrationTest extends IntegrationTestForBasicDao <EmailPropertyDao, EmailProperty, Long> {
 
     private static final String NAME = "name";
     private static final String VALUE = "value";
-
 
     @Autowired
     private EmailPropertyDao emailPropertyDao;
@@ -36,20 +40,27 @@ public class EmailPropertyDaoIntegrationTest extends IntegrationTestForBasicDao 
 
     @Before
     public void setUp() throws Exception {
-        EmailPropertyId idToSave = new EmailPropertyId();
-        idToSave.setType(EmailType.CONTACT_US);
-        idToSave.setName(NAME);
+        entityToSave.setType(CONTACT_US);
+        entityToSave.setName(NAME);
         entityToSave.setValue(VALUE);
-        entityToSave.setEmailPropertyId(idToSave);
 
-        EmailPropertyId idToLookup = new EmailPropertyId();
-        idToLookup.setType(EmailType.RESET_PASSWORD);
-        idToLookup.setName(NAME);
+        entityToLookup.setType(RESET_PASSWORD);
+        entityToLookup.setName(NAME);
         entityToLookup.setValue(VALUE);
-        entityToLookup.setEmailPropertyId(idToLookup);
         emailPropertyDao.save(entityToLookup);
     }
 
+    @Test
+    public void findByEmailType_will_return_property() throws Exception {
+        Collection<EmailProperty> properties = emailPropertyDao.findByType(RESET_PASSWORD);
+        assertThat(properties, contains(entityToLookup));
+    }
+
+    @Test
+    public void findByEmailType_will_return_only_one_property() throws Exception {
+        Collection<EmailProperty> properties = emailPropertyDao.findByType(RESET_PASSWORD);
+        assertThat(properties, hasSize(1));
+    }
 
     @Override
     public EmailPropertyDao getDao() {
@@ -72,7 +83,7 @@ public class EmailPropertyDaoIntegrationTest extends IntegrationTestForBasicDao 
     }
 
     @Override
-    public EmailPropertyId entityIdToLookup() {
-        return entityToLookup.getEmailPropertyId();
+    public Long entityIdToLookup() {
+        return entityToLookup.getId();
     }
 }

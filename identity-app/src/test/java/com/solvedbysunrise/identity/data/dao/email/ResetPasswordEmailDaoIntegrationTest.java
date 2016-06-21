@@ -3,6 +3,7 @@ package com.solvedbysunrise.identity.data.dao.email;
 import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
+import com.solvedbysunrise.identity.data.entity.jpa.email.PasswordResetResultType;
 import com.solvedbysunrise.identity.data.entity.jpa.email.ResetPasswordEmail;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,14 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.RESET_PASSWORD;
+import static com.solvedbysunrise.identity.data.entity.jpa.email.PasswordResetResultType.PENDING;
+import static com.solvedbysunrise.identity.data.entity.jpa.email.PasswordResetResultType.USED;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 @Rollback
@@ -52,6 +59,28 @@ public class ResetPasswordEmailDaoIntegrationTest extends IntegrationTestForBasi
         assertThat(email, is(entityToLookup));
     }
 
+    @Test
+    public void findByResetPasswordGuid_will_return_email() throws Exception {
+        ResetPasswordEmail email = resetPasswordEmailDao.findByResetPasswordGuid(RESET_GUID);
+        assertThat(email, is(entityToLookup));
+    }
+
+    @Test
+    public void findByToAddressAndResult_will_return_email() throws Exception {
+        entityToSave.setResult(USED);
+        resetPasswordEmailDao.save(entityToSave);
+        Collection<ResetPasswordEmail> emails = resetPasswordEmailDao.findByToAddressAndResult(entityToLookup.getToAddress(), PENDING);
+        assertThat(emails, hasItems(entityToLookup));
+    }
+
+    @Test
+    public void findByToAddressAndResult_will_return_only_one_email() throws Exception {
+        entityToSave.setResult(USED);
+        resetPasswordEmailDao.save(entityToSave);
+        Collection<ResetPasswordEmail> emails = resetPasswordEmailDao.findByToAddressAndResult(entityToLookup.getToAddress(), PENDING);
+        assertThat(emails, hasSize(1));
+    }
+
     @Override
     public ResetPasswordEmailDao getDao() {
         return resetPasswordEmailDao;
@@ -80,5 +109,6 @@ public class ResetPasswordEmailDaoIntegrationTest extends IntegrationTestForBasi
     public void setValues(ResetPasswordEmail entity) {
         BasicEmailDaoIntegrationTest.setValues(entity, RESET_PASSWORD);
         entity.setResetPasswordGuid(RESET_GUID);
+        entity.setResult(PENDING);
     }
 }

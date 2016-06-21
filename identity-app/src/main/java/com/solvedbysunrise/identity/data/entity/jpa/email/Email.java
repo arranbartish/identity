@@ -14,6 +14,7 @@ import java.util.Locale;
 
 import static com.solvedbysunrise.identity.internationalization.LocaleUtil.convertToLocale;
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -68,11 +69,13 @@ public abstract class Email extends ReflectiveEntity {
 
     @Column(name = "CREATE_DATE", nullable = false, updatable = false)
     @CreatedDate
-    private Calendar createDate;
+    @Temporal(TIMESTAMP)
+    private Date createDate;
 
     @Column(name = "UPDATE_DATE")
     @LastModifiedDate
-    private Calendar updateDate;
+    @Temporal(TIMESTAMP)
+    private Date updateDate;
 
     public Long getId() {
         return id;
@@ -146,19 +149,19 @@ public abstract class Email extends ReflectiveEntity {
         this.countryCode = countryCode;
     }
 
-    public Calendar getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Calendar createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Calendar getUpdateDate() {
+    public Date getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Calendar updateDate) {
+    public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
 

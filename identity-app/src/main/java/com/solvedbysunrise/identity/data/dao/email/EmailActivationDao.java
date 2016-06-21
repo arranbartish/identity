@@ -11,25 +11,6 @@ public interface EmailActivationDao extends
 
     ActivationEmail findByConfirmationId(String confirmationId);
 
-    //    final static Logger LOGGER = LoggerFactory.getLogger(EmailActivationDao.class);
-//
-//    @Autowired
-//    public EmailActivationDao(SessionFactory sessionFactory) {
-//        super(sessionFactory, ActivationEmail.class);
-//    }
-//
-//    @Override
-//    public ActivationEmail getByActivationGuid(String activationGuid) {
-//        final String finalActivationGuid = Preconditions.checkNotNull(activationGuid);
-//        ActivationEmail activationEmail = findUnique(
-//                "from ActivationEmail ea where ea.activationGuid = :activationGuid",
-//                getStringArray("activationGuid"), getObjectArray(finalActivationGuid));
-//        if (activationEmail != null) {
-//            return activationEmail;
-//        } else {
-//            String msg = String.format("Activation guid [%s] not found.", finalActivationGuid);
-//            LOGGER.info(msg);
-//            throw new ActivationEmailNotFoundException(msg);
-//        }
-//    }
+    ActivationEmail findByActivationGuid(String ActivationGuid);
+
 }

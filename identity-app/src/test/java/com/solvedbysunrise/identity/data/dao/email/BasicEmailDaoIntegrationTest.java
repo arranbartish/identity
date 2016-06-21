@@ -6,6 +6,7 @@ import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
 import com.solvedbysunrise.identity.data.entity.jpa.email.BasicEmail;
 import com.solvedbysunrise.identity.data.entity.jpa.email.Email;
 import com.solvedbysunrise.identity.data.entity.jpa.email.EmailType;
+import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,19 +14,21 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
+import static com.solvedbysunrise.identity.data.dao.email.BasicEmailDao.FIRST_TEN_EMAILS;
 import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.CONTACT_US;
 import static java.util.Locale.CANADA;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.number.OrderingComparison.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 @Rollback
@@ -34,6 +37,7 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(classes = {WastedtimeApplication.class, TestConfiguration.class})
 @IntegrationTest
 public class BasicEmailDaoIntegrationTest extends IntegrationTestForBasicDao <BasicEmailDao, BasicEmail, Long>{
+
 
     private static final String SOME_HTML = "html";
     private static final String SOME_TEXT = "text";
@@ -70,11 +74,18 @@ public class BasicEmailDaoIntegrationTest extends IntegrationTestForBasicDao <Ba
     }
 
     @Test
+    public void findUnsentEmailsOlderThanDate_will_return_email() throws Exception {
+        Page<BasicEmail> emails = basicEmailDao.findUnsentEmails(FIRST_TEN_EMAILS);
+
+        assertThat(emails.getContent(), hasItems(entityToLookup));
+    }
+
+    @Test
     public void entity_will_have_a_creation_date_when_created() throws Exception {
         BasicEmail email = basicEmailDao.findOne(entityToLookup.getId());
         assertThat(email.getCreateDate(), allOf(
                 is( notNullValue()),
-                lessThanOrEqualTo(Calendar.getInstance())));
+                lessThanOrEqualTo( now().toDate() )));
     }
 
     @Test
@@ -87,7 +98,7 @@ public class BasicEmailDaoIntegrationTest extends IntegrationTestForBasicDao <Ba
     public void entity_will_have_an_update_date_after_the_created_date_when_updated() throws Exception {
         Long id = entityToLookup.getId();
         BasicEmail email = basicEmailDao.findOne(id);
-        Calendar originalCreateDate = email.getCreateDate();
+        Date originalCreateDate = email.getCreateDate();
         email.setTextPayload("something else");
         basicEmailDao.save(email);
         email = basicEmailDao.findOne(id);
@@ -133,7 +144,6 @@ public class BasicEmailDaoIntegrationTest extends IntegrationTestForBasicDao <Ba
         entity.setGuid(GUID);
         entity.setConfirmationId(CONFIRMATION_ID);
         entity.setType(type);
-        entity.setSentDate(DateTime.now().toDate());
         entity.setToAddress(ADDRESS);
     }
 }
