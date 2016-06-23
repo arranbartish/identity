@@ -1,12 +1,27 @@
 package com.solvedbysunrise.identity.config;
 
+import com.google.common.collect.Lists;
+import com.solvedbysunrise.identity.config.exception.IncompleteConfiguration;
+import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
+import com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.values;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang3.tuple.Pair.of;
 
 public class ProductionConfiguration implements WastedTimeConfiguration {
@@ -63,6 +78,25 @@ public class ProductionConfiguration implements WastedTimeConfiguration {
                 of("database", wastedTimeUrl()),
                 of("url", wastedTimeBaseUrl()),
                 of("test", testValue()));
+    }
+
+    @Bean(name = "applicationProperties")
+    public ApplicationProperties applicationProperties() {
+        ApplicationProperties applicationProperties = new ApplicationProperties();
+        List<Key> unpamppedKeys = new ArrayList<>();
+        try ( Stream<Key> keys = stream(values()) ) {
+            unpamppedKeys.addAll(
+                    keys
+                            .parallel()
+                            .filter(key -> applicationProperties.get(key.getKey()) == null)
+                            .collect(toList()));
+        }
+        if ( isNotEmpty(unpamppedKeys) ) {
+            StringBuilder builder = new StringBuilder();
+            unpamppedKeys.stream().forEach(unmappedKey -> builder.append("- ").append(unmappedKey.getKey()).append("\n"));
+            throw new IncompleteConfiguration(format("[%s] configuration items are missing\n%s", unpamppedKeys.size(), builder.toString()));
+        }
+        return applicationProperties;
     }
 
 }

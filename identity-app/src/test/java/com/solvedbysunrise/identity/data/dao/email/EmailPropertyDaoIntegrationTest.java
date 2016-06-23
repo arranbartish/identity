@@ -3,7 +3,6 @@ package com.solvedbysunrise.identity.data.dao.email;
 import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
-import com.solvedbysunrise.identity.data.entity.jpa.email.EmailProperty;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
