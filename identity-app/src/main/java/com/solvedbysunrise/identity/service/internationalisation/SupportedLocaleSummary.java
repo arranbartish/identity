@@ -1,6 +1,6 @@
 package com.solvedbysunrise.identity.service.internationalisation;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -9,7 +9,7 @@ import java.util.Map;
 import static java.util.Locale.ENGLISH;
 import static java.util.Locale.FRENCH;
 
-public class SupportedLocaleSummary extends RefelctiveBean {
+public class SupportedLocaleSummary extends ReflectiveBean {
 
     private final Locale locale;
     private final Map<String, String> localisedNames;

@@ -1,8 +1,8 @@
 package com.solvedbysunrise.identity.service.dtto;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
-public class IdOnly extends RefelctiveBean {
+public class IdOnly extends ReflectiveBean {
 
     private String id;
 

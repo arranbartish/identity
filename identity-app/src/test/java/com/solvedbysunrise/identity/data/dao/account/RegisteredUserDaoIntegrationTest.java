@@ -3,9 +3,7 @@ package com.solvedbysunrise.identity.data.dao.account;
 import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.data.dao.IntegrationTestForBasicDao;
-import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
 import com.solvedbysunrise.identity.data.entity.jpa.user.RegisteredUser;
-import org.hamcrest.CoreMatchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.solvedbysunrise.identity.data.entity.jpa.user.PhoneType.Mobile;
+import static com.solvedbysunrise.identity.data.entity.jpa.user.PhoneType.MOBILE;
 import static java.util.Locale.CANADA_FRENCH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -96,7 +94,7 @@ public class RegisteredUserDaoIntegrationTest extends IntegrationTestForBasicDao
         entity.setFamilyName(LAST_NAME);
         entity.setGivenNames(GIVEN_NAMES);
         entity.setPrimaryPhone(PRIMARY_PHONE);
-        entity.setPrimaryPhoneType(Mobile);
+        entity.setPrimaryPhoneType(MOBILE);
         entity.setResidenceCountryCode(CANADA_FRENCH.getCountry());
         entity.setCountryCode(CANADA_FRENCH.getCountry());
         entity.setLocale(CANADA_FRENCH);

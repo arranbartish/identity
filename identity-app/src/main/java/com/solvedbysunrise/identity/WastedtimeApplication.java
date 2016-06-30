@@ -1,6 +1,8 @@
 package com.solvedbysunrise.identity;
 
 import com.solvedbysunrise.identity.config.ProductionConfiguration;
+import com.solvedbysunrise.identity.service.ContentKey;
+import com.solvedbysunrise.identity.service.velocity.ContentGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +16,9 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Validator;
+import java.util.Map;
+
+import static com.google.common.collect.Maps.newHashMap;
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -43,5 +48,15 @@ public class WastedtimeApplication {
         return new LocalValidatorFactoryBean();
     }
 
+
+    @Bean
+    public Map<ContentKey, ContentGenerator> htmlVelocityContentGeneratorMap() {
+        return newHashMap();
+    }
+
+    @Bean
+    public Map<ContentKey, ContentGenerator> textVelocityContentGeneratorMap() {
+        return newHashMap();
+    }
 
 }

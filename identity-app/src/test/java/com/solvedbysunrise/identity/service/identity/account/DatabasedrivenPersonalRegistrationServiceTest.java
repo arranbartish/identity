@@ -1,40 +1,38 @@
 package com.solvedbysunrise.identity.service.identity.account;
 
-import com.receiptdrop.identity.account.dto.Address;
-import com.receiptdrop.identity.account.dto.PersonalRegistrationRequest;
-import com.receiptdrop.identity.dao.RegisteredEntityDao;
-import com.receiptdrop.identity.dao.RegisteredUserDao;
-import com.receiptdrop.identity.domain.entity.BasicRegisteredEntity;
-import com.receiptdrop.identity.domain.user.RegisteredUser;
-import com.receiptdrop.identity.email.SendEmailManager;
-import com.receiptdrop.identity.enums.Gender;
-import com.receiptdrop.service.properties.ApplicationPropertiesService;
-import com.receiptdrop.service.properties.dto.ApplicationProperties;
+import com.solvedbysunrise.identity.data.dao.account.RegisteredEntityDao;
+import com.solvedbysunrise.identity.data.dao.account.RegisteredUserDao;
+import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
+import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
+import com.solvedbysunrise.identity.data.entity.jpa.user.RegisteredUser;
+import com.solvedbysunrise.identity.service.DatabasedrivenPersonalRegistrationService;
+import com.solvedbysunrise.identity.service.SendEmailManager;
+import com.solvedbysunrise.identity.service.dtto.Address;
+import com.solvedbysunrise.identity.service.dtto.PersonalRegistrationRequest;
+import com.solvedbysunrise.identity.service.identity.enums.Gender;
+import com.solvedbysunrise.identity.service.properties.ApplicationPropertiesService;
+import com.solvedbysunrise.identity.service.security.ApiKeyService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
 import java.util.Locale;
 
-import static com.receiptdrop.helper.date.DateUtil.createDate;
-import static com.receiptdrop.identity.enums.Gender.MALE;
+import static com.solvedbysunrise.identity.service.identity.enums.Gender.MALE;
 import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.LocaleUtils.toLocale;
 import static org.hamcrest.CoreMatchers.*;
+import static org.joda.time.DateTime.parse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PersonalRegistrationServiceImplTest {
+public class DatabasedrivenPersonalRegistrationServiceTest {
 
 	private static final String STREET = "209/28 Queensbridge St";
 
@@ -48,7 +46,7 @@ public class PersonalRegistrationServiceImplTest {
 
 	private static final String COUNTRY_CODE = LOCALE.getCountry();
 
-	private static final Date DATE_OF_BIRTH = createDate(1981, 3, 20);
+	private static final Date DATE_OF_BIRTH = parse("1981-03-20T00:00").toDate();
 
 	private static final String EMAIL = "anemail@domain.com";
 
@@ -98,17 +96,15 @@ public class PersonalRegistrationServiceImplTest {
     @Captor
     private ArgumentCaptor<BasicRegisteredEntity> entityCaptor;
 
-	private PersonalRegistrationServiceImpl personalRegistrationService;
+	@InjectMocks
+	private DatabasedrivenPersonalRegistrationService personalRegistrationService;
 
 	@Before
 	public void setup() {
-		initMocks(this);
-		personalRegistrationService = new PersonalRegistrationServiceImpl(passwordEncoder, registeredUserDao,
-                entityDao, sendEmailManager, apiKeyService, applicationPropertiesService);
 		when(passwordEncoder.encode(Mockito.anyString())).thenReturn(ENCODED_PASSWORD);
         when(applicationPropertiesService.getApplicationProperties()).thenReturn(applicationProperties);
         when(applicationProperties.getCurrentPasswordVersion()).thenReturn(CURRENT_PASSWORD_VERSION);
-        when(entityDao.getById(null/*hibernate sets this so for it's null when mocked*/)).thenReturn(registeredEntity);
+        when(entityDao.findOne(null/*hibernate sets this so for it's null when mocked*/)).thenReturn(registeredEntity);
 	}
 	
 	@Test
@@ -117,8 +113,8 @@ public class PersonalRegistrationServiceImplTest {
 		PersonalRegistrationRequest request = buildRegistrationRequest();
 		personalRegistrationService.createAccount(request);
 		
-		verify(registeredUserDao).saveOrUpdate(userCaptor.capture());
-        verify(entityDao).saveOrUpdate(entityCaptor.capture());
+		verify(registeredUserDao).save(userCaptor.capture());
+        verify(entityDao).save(entityCaptor.capture());
 		
 		RegisteredUser registeredUser = userCaptor.getValue();
 	    assertThat(registeredUser.getPrimaryEmail(), is(EMAIL));

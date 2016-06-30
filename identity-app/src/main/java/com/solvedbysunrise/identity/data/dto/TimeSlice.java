@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 import com.solvedbysunrise.identity.data.dto.serialization.DurationDeserializer;
 import com.solvedbysunrise.identity.data.dto.serialization.DurationSerializer;
 import org.joda.time.Duration;
 
-public class TimeSlice extends RefelctiveBean {
+public class TimeSlice extends ReflectiveBean {
 
     @JsonDeserialize(using = DurationDeserializer.class)
     @JsonSerialize(using = DurationSerializer.class)

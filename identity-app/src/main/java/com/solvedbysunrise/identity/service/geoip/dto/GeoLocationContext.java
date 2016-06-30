@@ -1,9 +1,9 @@
 package com.solvedbysunrise.identity.service.geoip.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
-public class GeoLocationContext extends RefelctiveBean {
+public class GeoLocationContext extends ReflectiveBean {
 
     @JsonProperty(value = "ip")
     private String ipAddress;

@@ -1,38 +1,47 @@
 package com.solvedbysunrise.identity.service.identity.email;
 
-import com.receiptdrop.identity.content.ContentKey;
-import com.receiptdrop.identity.dao.IntegrationUnitTestBase;
-import com.receiptdrop.service.velocity.ContentGenerator;
-import com.receiptdrop.service.velocity.VelocityFileTemplateContentGenerator;
+import com.solvedbysunrise.identity.WastedtimeApplication;
+import com.solvedbysunrise.identity.config.TestConfiguration;
+import com.solvedbysunrise.identity.service.ContentKey;
+import com.solvedbysunrise.identity.service.velocity.ContentGenerator;
+import com.solvedbysunrise.identity.service.velocity.VelocityFileTemplateContentGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Set;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.ClassUtils.isAssignable;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+
+@Rollback
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-public class EmailTemplateConfigurationIntegrationTest extends IntegrationUnitTestBase {
+@SpringApplicationConfiguration(classes = {WastedtimeApplication.class, TestConfiguration.class})
+@IntegrationTest
+public class EmailTemplateConfigurationIntegrationTest  {
 
     private static final String HTML_EMAIL = "email/html/";
     private static final String TEXT_EMAIL = "email/text/";
     private static final String HTML = "HTML";
     private static final String TEXT = "TEXT";
 
-    @Resource(name = "englishHtmlVelocityContentGeneratorMap")
+    @Autowired
     private Map<ContentKey, ContentGenerator> htmlVelocityContentGeneratorMap;
 
-    @Resource(name = "englishTextVelocityContentGeneratorMap")
+    @Autowired
     private Map<ContentKey, ContentGenerator> textVelocityContentGeneratorMap;
 
     @Test

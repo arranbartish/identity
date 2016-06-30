@@ -1,12 +1,11 @@
 package com.solvedbysunrise.identity.service.security;
 
-import com.receiptdrop.identity.account.ApiKeyService;
-import com.receiptdrop.messaging.service.SignedPayload;
-import com.receiptdrop.service.properties.ApplicationPropertiesService;
-import com.receiptdrop.service.properties.dto.ApplicationProperties;
-import com.receiptdrop.service.security.exception.ExpiredException;
-import com.receiptdrop.service.security.exception.HashFailedException;
-import com.receiptdrop.service.security.exception.SignatureFailedException;
+import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
+import com.solvedbysunrise.identity.service.properties.ApplicationPropertiesService;
+import com.solvedbysunrise.identity.service.security.dto.SignedPayload;
+import com.solvedbysunrise.identity.service.security.exception.ExpiredException;
+import com.solvedbysunrise.identity.service.security.exception.HashFailedException;
+import com.solvedbysunrise.identity.service.security.exception.SignatureFailedException;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.receiptdrop.service.properties.dto.ApplicationProperties.MAX_AGE_OF_MESSAGE_IN_MILLIS;
-import static com.receiptdrop.service.properties.dto.ApplicationProperties.RECEIPTDROP_ACCOUNT_ID;
+import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.MAX_AGE_OF_MESSAGE_IN_MILLIS;
+import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.ROOT_ACCOUNT_ID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -117,8 +116,8 @@ public class HashTimeoutSha256MessageValidationServiceTest {
 
     private ApplicationProperties buildApplicationProperties(final Integer maxMessageAgeInMillis) {
         ApplicationProperties applicationProperties = new ApplicationProperties();
-        applicationProperties.put(MAX_AGE_OF_MESSAGE_IN_MILLIS, maxMessageAgeInMillis.toString());
-        applicationProperties.put(RECEIPTDROP_ACCOUNT_ID, ACCOUNT_ID.toString());
+        applicationProperties.put(MAX_AGE_OF_MESSAGE_IN_MILLIS.getKey(), maxMessageAgeInMillis.toString());
+        applicationProperties.put(ROOT_ACCOUNT_ID.getKey(), ACCOUNT_ID.toString());
 
         return applicationProperties;
     }

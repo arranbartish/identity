@@ -45,6 +45,11 @@ public class HashTimeoutSha256MessageValidationService implements MessageValidat
     }
 
     @Override
+    public SignedPayload signPayload(String payload) {
+        return signPayloadForAccount(applicationPropertiesService.getApplicationProperties().getRootAccountId(), payload);
+    }
+
+    @Override
     public SignedPayload signPayloadForAccount(Long accountId, String payload) {
         SignedPayload signedPayload = new SignedPayload();
         long milliSeconds = now().getMillis();

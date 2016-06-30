@@ -1,8 +1,8 @@
 package com.solvedbysunrise.identity.service.dtto;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
-public class ContactUsRequest extends RefelctiveBean {
+public class ContactUsRequest extends ReflectiveBean {
 
     private String name;
     private String email;

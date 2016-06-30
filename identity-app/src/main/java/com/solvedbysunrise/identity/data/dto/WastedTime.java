@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 import com.solvedbysunrise.identity.data.dto.serialization.DateTimeDeserializer;
 import com.solvedbysunrise.identity.data.dto.serialization.DateTimeSerializer;
 import com.solvedbysunrise.identity.data.dto.serialization.DurationDeserializer;
@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.text.WordUtils.capitalizeFully;
 
-public class WastedTime extends RefelctiveBean {
+public class WastedTime extends ReflectiveBean {
 
     @NotEmpty
     private final String who;

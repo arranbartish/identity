@@ -1,9 +1,9 @@
 package com.solvedbysunrise.identity.service.dtto;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 import com.solvedbysunrise.identity.data.entity.jpa.email.EmailType;
 
-public class PreparedEmail extends RefelctiveBean {
+public class PreparedEmail extends ReflectiveBean {
 
     private final String guid;   // this may need to be a map of parameters one day
 

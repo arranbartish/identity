@@ -1,8 +1,8 @@
 package com.solvedbysunrise.identity.service.dtto;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
-public class UsernameAndPassword extends RefelctiveBean {
+public class UsernameAndPassword extends ReflectiveBean {
 
     private final String username;
     private final String password;

@@ -32,24 +32,24 @@ import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 @Transactional
 public class MailGunEmailService implements SendEmailService{
 
-    static final Logger LOGGER = getLogger(MailGunEmailService.class);
-    static final String MAILGUN_API = "api";
-    static final String MAILGUN_FROM = "from";
-    static final String MAILGUN_TO = "to";
-    static final String MAILGUN_SUBJECT = "subject";
-    static final String MAILGUN_TEXT = "text";
+    public static final Logger LOGGER = getLogger(MailGunEmailService.class);
+    public static final String MAILGUN_API = "api";
+    public static final String MAILGUN_FROM = "from";
+    public static final String MAILGUN_TO = "to";
+    public static final String MAILGUN_SUBJECT = "subject";
+    public static final String MAILGUN_TEXT = "text";
 
-    static final String MAILGUN_HTML = "html";
-    static final String TRACKING_OPEN = "o:tracking-opens";
-    static final String TRACKING = "o:tracking";
-    static final String TRACKING_CLICK = "o:tracking-clicks";
-    static final String CAMPAIGN = "o:campaign";
-    static final String TAG = "o:tag";
+    public static final String MAILGUN_HTML = "html";
+    public static final String TRACKING_OPEN = "o:tracking-opens";
+    public static final String TRACKING = "o:tracking";
+    public static final String TRACKING_CLICK = "o:tracking-clicks";
+    public static final String CAMPAIGN = "o:campaign";
+    public static final String TAG = "o:tag";
 
-    static final String REQUEST_URL_HEADER = "X-CUSTOM-HTTP-REQUEST-URL";
-    static final String CONTENT_TYPE_HEADER = "Content-Type";
-    static final String AUTHORIZATION_HEADER = "Authorization";
-    static final String MAILGUN_PARAMETER_HEADER = "X-Mailgun-Variables";
+    public static final String REQUEST_URL_HEADER = "X-CUSTOM-HTTP-REQUEST-URL";
+    public static final String CONTENT_TYPE_HEADER = "Content-Type";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String MAILGUN_PARAMETER_HEADER = "X-Mailgun-Variables";
 
     private final RestTemplate restTemplate;
 

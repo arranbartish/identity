@@ -2,19 +2,27 @@ package com.solvedbysunrise.identity.service.identity.enums;
 
 import org.junit.Test;
 
-import static com.receiptdrop.identity.enums.Gender.*;
+import static com.solvedbysunrise.identity.service.identity.enums.Gender.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class GenderTest {
 
     @Test
-    public void fromValue_Will_Return_Values_When_Provided_Valid_Options() throws Exception {
+    public void fromValue_Will_Return_male_When_Provided_male() throws Exception {
 
         Gender male = fromValue("M");
         assertThat(male, is(MALE));
-        Gender female = fromValue("F");
-        assertThat(female, is(FEMALE));
     }
+
+    @Test
+    public void fromValue_Will_Return_female_When_Provided_female() throws Exception {
+
+        Gender male = fromValue("M");
+        assertThat(male, is(FEMALE));
+    }
+
+
 
     @Test
     public void fromValue_Will_Return_Male_When_Null() throws Exception {

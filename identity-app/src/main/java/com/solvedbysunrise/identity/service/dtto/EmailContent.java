@@ -1,10 +1,10 @@
 package com.solvedbysunrise.identity.service.dtto;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
 import java.util.Locale;
 
-public class EmailContent extends RefelctiveBean {
+public class EmailContent extends ReflectiveBean {
 
     private final String content;
     private final ContentType contentType;
