@@ -46,7 +46,7 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class AsyncronousSendEmailManager implements SendEmailManager {
 
     static final Logger LOGGER = getLogger(AsyncronousSendEmailManager.class);
-    private static final int FIRST_PAGE = 1;
+    private static final int FIRST_PAGE = 0;
     private static final boolean PARALLEL = true;
 
     private final EmailService emailService;

@@ -96,7 +96,6 @@ public class MailGunEmailServiceTest {
                 ));
 
         assertThat(headers, allOf(
-                hasEntry(is(MailGunEmailService.REQUEST_URL_HEADER), is(notNullValue())),
                 hasEntry(is(MailGunEmailService.CONTENT_TYPE_HEADER), is(notNullValue())),
                 hasEntry(is(MailGunEmailService.AUTHORIZATION_HEADER), is(notNullValue()))
         ));

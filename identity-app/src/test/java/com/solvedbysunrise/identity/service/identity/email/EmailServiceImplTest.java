@@ -11,6 +11,8 @@ import com.solvedbysunrise.identity.service.EmailServiceImpl;
 import com.solvedbysunrise.identity.service.SendEmailService;
 import com.solvedbysunrise.identity.service.dtto.EmailContent;
 import com.solvedbysunrise.identity.service.dtto.PreparedEmail;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +22,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.sql.Timestamp;
+
 import static com.solvedbysunrise.identity.data.dto.EntitySummary.createEntitySummary;
 import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.REGISTRATION_ACTIVATION;
 import static com.solvedbysunrise.identity.service.dtto.ContentType.HTML;
@@ -27,6 +31,7 @@ import static com.solvedbysunrise.identity.service.dtto.ContentType.TEXT;
 import static java.util.Locale.CANADA_FRENCH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.equalTo;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -107,10 +112,10 @@ public class EmailServiceImplTest {
 
         assertThat(emailEvent.getEmailId(), is(EMAIL_ID));
         assertThat(emailEvent.getEventType(), is(EVENT));
-        assertThat(emailEvent.getRemoteDate(), is(now));
+        assertThat(emailEvent.getRemoteDate(), is(equalTo(new Timestamp(now.getMillis()))));
 
         assertThat(basicEmail.getConfirmationId(), is(CONFIRMATION_ID));
-        assertThat(basicEmail.getSentDate(), is(now));
+        assertThat(basicEmail.getSentDate(), is(equalTo(new Timestamp(now.getMillis()))));
 
         verifyNoMoreInteractions(basicEmailDao, activationEmailDao, sendEmailService, emailEventDao);
     }
@@ -133,10 +138,10 @@ public class EmailServiceImplTest {
 
         assertThat(emailEvent.getEmailId(), is(EMAIL_ID));
         assertThat(emailEvent.getEventType(), is(EVENT));
-        assertThat(emailEvent.getRemoteDate(), is(now));
+        assertThat(emailEvent.getRemoteDate(), is(equalTo(new Timestamp(now.getMillis()))));
 
         assertThat(basicEmail.getConfirmationId(), is(CONFIRMATION_ID));
-        assertThat(basicEmail.getSentDate(), is(now));
+        assertThat(basicEmail.getSentDate(), is(equalTo(new Timestamp(now.getMillis()))));
 
         verifyNoMoreInteractions(basicEmailDao, activationEmailDao, sendEmailService, emailEventDao);
     }

@@ -5,6 +5,7 @@ import com.solvedbysunrise.identity.config.exception.IncompleteConfiguration;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.tuple.Pair.of;
 
 public class ProductionConfiguration implements WastedTimeConfiguration {
@@ -88,7 +90,7 @@ public class ProductionConfiguration implements WastedTimeConfiguration {
             unpamppedKeys.addAll(
                     keys
                             .parallel()
-                            .filter(key -> applicationProperties.get(key.getKey()) == null)
+                            .filter(key -> isBlank(applicationProperties.get(key.getKey())))
                             .collect(toList()));
         }
         if ( isNotEmpty(unpamppedKeys) ) {

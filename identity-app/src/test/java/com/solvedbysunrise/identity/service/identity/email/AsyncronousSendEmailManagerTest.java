@@ -108,6 +108,8 @@ public class AsyncronousSendEmailManagerTest {
     public void resendAnyOldEmailsThatHaveNotBeenSent_Will_not_send_mails_inside_of_resend_cutoff() throws Exception {
         when(applicationPropertiesService.getApplicationProperties()).thenReturn(applicationProperties);
         when(applicationProperties.getEmailResendTimeInSeconds()).thenReturn(FIVE_MINUTES_IN_SECONDS);
+        when(applicationProperties.getEmailResendBatchSize()).thenReturn(10);
+
 
         BasicEmail basicEmail = new BasicEmail();
         basicEmail.setCreateDate(DateTime.now().toDate());
@@ -125,6 +127,7 @@ public class AsyncronousSendEmailManagerTest {
     public void resendAnyOldEmailsThatHaveNotBeenSent_Will_send_mails_outside_of_resend_cutoff() throws Exception {
         when(applicationPropertiesService.getApplicationProperties()).thenReturn(applicationProperties);
         when(applicationProperties.getEmailResendTimeInSeconds()).thenReturn(FIVE_MINUTES_IN_SECONDS);
+        when(applicationProperties.getEmailResendBatchSize()).thenReturn(10);
 
         BasicEmail basicEmail = new BasicEmail();
         basicEmail.setCreateDate(DateTime.now().minusDays(1).toDate());

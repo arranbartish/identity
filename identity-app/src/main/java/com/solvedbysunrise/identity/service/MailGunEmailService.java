@@ -46,7 +46,6 @@ public class MailGunEmailService implements SendEmailService{
     public static final String CAMPAIGN = "o:campaign";
     public static final String TAG = "o:tag";
 
-    public static final String REQUEST_URL_HEADER = "X-CUSTOM-HTTP-REQUEST-URL";
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String MAILGUN_PARAMETER_HEADER = "X-Mailgun-Variables";

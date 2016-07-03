@@ -17,7 +17,7 @@ public class LocaleUtilsLocaleService implements LocaleService {
     @Override
     public Locale getDefaultLocaleForCountyCode(String countryCode) {
         List<Locale> locales = languagesByCountry(countryCode);
-        Optional<Locale> firstLocale = locales.stream().sorted((left, right) -> left.toString().compareTo(right.toString())).findFirst();
+        Optional<Locale> firstLocale = locales.stream().sorted((left, right) -> right.toString().compareTo(left.toString())).findFirst();
         return firstLocale.orElse(Locale.CANADA_FRENCH);
     }
 

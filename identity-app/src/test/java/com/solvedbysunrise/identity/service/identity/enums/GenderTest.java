@@ -18,8 +18,8 @@ public class GenderTest {
     @Test
     public void fromValue_Will_Return_female_When_Provided_female() throws Exception {
 
-        Gender male = fromValue("M");
-        assertThat(male, is(FEMALE));
+        Gender female = fromValue("F");
+        assertThat(female, is(FEMALE));
     }
 
 
