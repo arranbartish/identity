@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class SpringInjectedEmailPropertiesServiceTest {
 
-    private final Map<EmailType, EmailProperties> emailPropertiesMap = buildEmailPropertiesMap();
+    private final Map<String, EmailProperties> emailPropertiesMap = buildEmailPropertiesMap();
 
     private SpringInjectedEmailPropertiesService emailPropertiesService;
 
@@ -47,8 +47,8 @@ public class SpringInjectedEmailPropertiesServiceTest {
                 hasEntry(EmailProperties.IS_CLICK_TRACKING_ENABLED, EmailProperties.IS_CLICK_TRACKING_ENABLED)));
     }
 
-    private Map<EmailType, EmailProperties> buildEmailPropertiesMap() {
-        Map<EmailType, EmailProperties> map = new HashMap<>();
+    private Map<String, EmailProperties> buildEmailPropertiesMap() {
+        Map<String, EmailProperties> map = new HashMap<>();
         EmailProperties emailProperties = new EmailProperties();
 
         emailProperties.put(EmailProperties.SUBJECT, EmailProperties.SUBJECT);
@@ -60,7 +60,7 @@ public class SpringInjectedEmailPropertiesServiceTest {
         emailProperties.put(EmailProperties.IS_OPEN_TRACKING_ENABLED, EmailProperties.IS_OPEN_TRACKING_ENABLED);
         emailProperties.put(EmailProperties.IS_CLICK_TRACKING_ENABLED, EmailProperties.IS_CLICK_TRACKING_ENABLED);
 
-        map.put(REGISTRATION_ACTIVATION, emailProperties);
+        map.put(REGISTRATION_ACTIVATION.name(), emailProperties);
         return map;
     }
 

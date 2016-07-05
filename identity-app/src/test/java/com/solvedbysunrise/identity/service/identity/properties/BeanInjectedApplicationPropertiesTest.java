@@ -1,12 +1,10 @@
 package com.solvedbysunrise.identity.service.identity.properties;
 
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
-import com.solvedbysunrise.identity.service.properties.BeanInjectedApplicationProperties;
-import org.hamcrest.Matchers;
+import com.solvedbysunrise.identity.service.properties.BeanInjectedApplicationPropertiesService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.MAIL_GUN_API_KEY;
@@ -23,11 +21,11 @@ public class BeanInjectedApplicationPropertiesTest {
 
     private ApplicationProperties applicationProperties = buildApplicationProperties();
 
-    private BeanInjectedApplicationProperties databaseApplicationPropertiesService;
+    private BeanInjectedApplicationPropertiesService databaseApplicationPropertiesService;
 
     @Before
     public void setUp() throws Exception {
-        databaseApplicationPropertiesService = new BeanInjectedApplicationProperties(applicationProperties);
+        databaseApplicationPropertiesService = new BeanInjectedApplicationPropertiesService(applicationProperties);
     }
 
     @Test

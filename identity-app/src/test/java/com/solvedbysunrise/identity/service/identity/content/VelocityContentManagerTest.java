@@ -56,9 +56,9 @@ public class VelocityContentManagerTest {
         languageCategorisedTextVelocityContentGeneratorMap.put(FRENCH_CODE, frenchTextGenerator);
         languageCategorisedTextVelocityContentGeneratorMap.put(ENGLISH_CODE, englishTextGenerator);
 
-
-        velocityContentManager.setLanguageCategorisedHtmlVelocityContentGeneratorMap(languageCategorisedHtmlVelocityContentGeneratorMap);
-        velocityContentManager.setLanguageCategorisedTextVelocityContentGeneratorMap(languageCategorisedTextVelocityContentGeneratorMap);
+// FIXME
+//        velocityContentManager.setLanguageCategorisedHtmlVelocityContentGeneratorMap(languageCategorisedHtmlVelocityContentGeneratorMap);
+//        velocityContentManager.setLanguageCategorisedTextVelocityContentGeneratorMap(languageCategorisedTextVelocityContentGeneratorMap);
     }
 
     @Test
