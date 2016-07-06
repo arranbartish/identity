@@ -5,6 +5,7 @@ import com.solvedbysunrise.identity.data.entity.jpa.email.ResetPasswordEmail;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public interface ResetPasswordEmailDao extends
@@ -17,5 +18,4 @@ public interface ResetPasswordEmailDao extends
     ResetPasswordEmail findByResetPasswordGuid(String resetPasswordGuid);
 
     Collection<ResetPasswordEmail> findByToAddressAndResult(String toAddress, PasswordResetResultType result);
-
 }

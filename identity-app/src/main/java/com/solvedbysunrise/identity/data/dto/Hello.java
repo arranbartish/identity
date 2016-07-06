@@ -1,8 +1,8 @@
 package com.solvedbysunrise.identity.data.dto;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
-public class Hello extends RefelctiveBean {
+public class Hello extends ReflectiveBean {
 
     private String who;
 

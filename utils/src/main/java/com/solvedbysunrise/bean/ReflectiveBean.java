@@ -7,7 +7,7 @@ import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCod
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
-public abstract class RefelctiveBean implements Serializable {
+public abstract class ReflectiveBean implements Serializable {
 
     @Override
     public boolean equals(Object that) {

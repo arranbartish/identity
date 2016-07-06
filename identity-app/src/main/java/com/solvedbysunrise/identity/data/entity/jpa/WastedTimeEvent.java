@@ -1,6 +1,6 @@
 package com.solvedbysunrise.identity.data.entity.jpa;
 
-import com.solvedbysunrise.bean.RefelctiveBean;
+import com.solvedbysunrise.bean.ReflectiveBean;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Table(indexes = {
         @Index(name = "event_id",  columnList="id", unique = true)
 })
-public class WastedTimeEvent extends RefelctiveBean {
+public class WastedTimeEvent extends ReflectiveBean {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

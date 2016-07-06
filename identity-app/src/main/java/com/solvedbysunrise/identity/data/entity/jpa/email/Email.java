@@ -2,7 +2,9 @@ package com.solvedbysunrise.identity.data.entity.jpa.email;
 
 
 import com.solvedbysunrise.identity.data.entity.jpa.ReflectiveEntity;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -76,6 +78,11 @@ public abstract class Email extends ReflectiveEntity {
     @LastModifiedDate
     @Temporal(TIMESTAMP)
     private Date updateDate;
+
+    @Column(name = "UPDATE_BY", nullable = false)
+    @CreatedBy
+    @LastModifiedBy
+    private String updateBy;
 
     public Long getId() {
         return id;
@@ -163,6 +170,14 @@ public abstract class Email extends ReflectiveEntity {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
     }
 
     @Transient
