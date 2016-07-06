@@ -1,5 +1,6 @@
-# Wasted time app
-An app for tracking wasted time. I've stayed pretty close to the ideals of a 12 factor app.
+# Identity app
+An app for allowing registration and authentication
+[![Build Status](https://travis-ci.org/arranbartish/identity.svg?branch=develop)](https://travis-ci.org/arranbartish/identity)
 
 ## dev url
 https://arran-wasted-time.herokuapp.com
