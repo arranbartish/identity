@@ -5,6 +5,8 @@ import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key;
 import com.solvedbysunrise.identity.data.dto.EmailProperties;
 import com.solvedbysunrise.identity.data.entity.jpa.email.EmailType;
+import com.solvedbysunrise.identity.service.EmailPropertiesService;
+import com.solvedbysunrise.identity.service.SpringInjectedEmailPropertiesService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -157,12 +159,11 @@ public class ProductionConfiguration implements WastedTimeConfiguration {
         return applicationProperties;
     }
 
-    @Bean(name = "emailPropertiesMap")
-    public String emailPropertiesMap() {
+    @Bean
+    public EmailPropertiesService emailPropertiesMap() {
         Map<String, EmailProperties> emailPropertiesMap = newHashMap();
         emailPropertiesMap.put(EmailType.REGISTRATION_ACTIVATION.name(), new EmailProperties());
 
-        //return emailPropertiesMap;
-        return "works";
+        return new SpringInjectedEmailPropertiesService(emailPropertiesMap);
     }
 }

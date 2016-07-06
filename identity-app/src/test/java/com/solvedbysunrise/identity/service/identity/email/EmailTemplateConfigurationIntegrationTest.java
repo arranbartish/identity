@@ -3,6 +3,7 @@ package com.solvedbysunrise.identity.service.identity.email;
 import com.solvedbysunrise.identity.WastedtimeApplication;
 import com.solvedbysunrise.identity.config.TestConfiguration;
 import com.solvedbysunrise.identity.service.ContentKey;
+import com.solvedbysunrise.identity.service.VelocityContentGeneratorResolver;
 import com.solvedbysunrise.identity.service.velocity.ContentGenerator;
 import com.solvedbysunrise.identity.service.velocity.VelocityFileTemplateContentGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -39,28 +40,28 @@ public class EmailTemplateConfigurationIntegrationTest  {
     private static final String TEXT = "TEXT";
 
     @Autowired
-    private Map<ContentKey, ContentGenerator> htmlVelocityContentGeneratorMap;
+    private VelocityContentGeneratorResolver htmlVelocityContentGeneratorResolver;
 
     @Autowired
-    private Map<ContentKey, ContentGenerator> textVelocityContentGeneratorMap;
+    private VelocityContentGeneratorResolver textVelocityContentGeneratorResolver;
 
     @Test
     public void htmlVelocityContentGeneratorMap_Will_Only_Contain_Html_Templates() throws Exception {
-        Set<Map.Entry<ContentKey,ContentGenerator>> htmlTemplates = htmlVelocityContentGeneratorMap.entrySet();
+        Set<Map.Entry<ContentKey,ContentGenerator>> htmlTemplates = htmlVelocityContentGeneratorResolver.resolveAllEntries();
         checkTemplatePrefixes(htmlTemplates, HTML_EMAIL, HTML);
     }
 
     @Test
     public void textVelocityContentGeneratorMap_Will_Only_Contain_Text_Templates() throws Exception {
-        Set<Map.Entry<ContentKey,ContentGenerator>> htmlTemplates = textVelocityContentGeneratorMap.entrySet();
+        Set<Map.Entry<ContentKey,ContentGenerator>> htmlTemplates = textVelocityContentGeneratorResolver.resolveAllEntries();
         checkTemplatePrefixes(htmlTemplates, TEXT_EMAIL, TEXT);
     }
 
     @Test
     public void htmlVelocityContentGeneratorMap_Will_Also_Have_A_Text_Template_In_Each_Language(){
-        Set<Map.Entry<ContentKey, ContentGenerator>> entries = htmlVelocityContentGeneratorMap.entrySet();
+        Set<Map.Entry<ContentKey, ContentGenerator>> entries = htmlVelocityContentGeneratorResolver.resolveAllEntries();
         for (Map.Entry<ContentKey, ContentGenerator> entry : entries) {
-            ContentGenerator contentGenerator = textVelocityContentGeneratorMap.get(entry.getKey());
+            ContentGenerator contentGenerator = textVelocityContentGeneratorResolver.resolveContentGenerator(entry.getKey());
             assertThat(format("email [%s] had html template but not a text version", entry.getKey().toString()), contentGenerator, is(notNullValue()));
         }
 
@@ -68,9 +69,9 @@ public class EmailTemplateConfigurationIntegrationTest  {
 
     @Test
     public void textVelocityContentGeneratorMap_Will_Also_Have_A_HTML_Template_In_Each_Language(){
-        Set<Map.Entry<ContentKey, ContentGenerator>> entries = textVelocityContentGeneratorMap.entrySet();
+        Set<Map.Entry<ContentKey, ContentGenerator>> entries = textVelocityContentGeneratorResolver.resolveAllEntries();
         for (Map.Entry<ContentKey, ContentGenerator> entry : entries) {
-            ContentGenerator contentGenerator = htmlVelocityContentGeneratorMap.get(entry.getKey());
+            ContentGenerator contentGenerator = htmlVelocityContentGeneratorResolver.resolveContentGenerator(entry.getKey());
             assertThat(format("email [%s] had text template but not a html version", entry.getKey().toString()), contentGenerator, is(notNullValue()));
         }
     }

@@ -2,7 +2,12 @@ package com.solvedbysunrise.identity;
 
 import com.solvedbysunrise.identity.config.ProductionConfiguration;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
+import com.solvedbysunrise.identity.data.dto.EmailProperties;
+import com.solvedbysunrise.identity.data.entity.jpa.email.EmailType;
 import com.solvedbysunrise.identity.service.ContentKey;
+import com.solvedbysunrise.identity.service.EmailPropertiesService;
+import com.solvedbysunrise.identity.service.SpringInjectedEmailPropertiesService;
+import com.solvedbysunrise.identity.service.VelocityContentGeneratorResolver;
 import com.solvedbysunrise.identity.service.security.UserIdAuditorAware;
 import com.solvedbysunrise.identity.service.velocity.ContentGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.Validator;
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import static com.google.common.collect.Maps.newHashMap;
 
@@ -59,13 +66,37 @@ public class WastedtimeApplication {
 
 
     @Bean
-    public Map<ContentKey, ContentGenerator> htmlVelocityContentGeneratorMap() {
-        return newHashMap();
+    public VelocityContentGeneratorResolver htmlVelocityContentGeneratorResolver() {
+        final Map<ContentKey, ContentGenerator> contentGeneratorMap = newHashMap();
+
+        return new VelocityContentGeneratorResolver() {
+            @Override
+            public ContentGenerator resolveContentGenerator(ContentKey contentKey) {
+                return contentGeneratorMap.get(contentKey);
+            }
+
+            @Override
+            public Set<Entry<ContentKey,ContentGenerator>> resolveAllEntries() {
+                return contentGeneratorMap.entrySet();
+            }
+        };
     }
 
     @Bean
-    public Map<ContentKey, ContentGenerator> textVelocityContentGeneratorMap() {
-        return newHashMap();
+    public VelocityContentGeneratorResolver textVelocityContentGeneratorResolver() {
+        final Map<ContentKey, ContentGenerator> contentGeneratorMap = newHashMap();
+
+        return new VelocityContentGeneratorResolver() {
+            @Override
+            public ContentGenerator resolveContentGenerator(ContentKey contentKey) {
+                return contentGeneratorMap.get(contentKey);
+            }
+
+            @Override
+            public Set<Entry<ContentKey,ContentGenerator>> resolveAllEntries() {
+                return contentGeneratorMap.entrySet();
+            }
+        };
     }
 
     @Bean

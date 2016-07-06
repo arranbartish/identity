@@ -11,19 +11,9 @@ import java.util.Map;
 
 import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.valueOf;
 
-@Service
 public class SpringInjectedEmailPropertiesService implements EmailPropertiesService {
 
     private final Map<EmailType, EmailProperties> emailPropertiesMap;
-
-    @Autowired
-    public SpringInjectedEmailPropertiesService(@Qualifier("emailPropertiesMap") String emailPropertiesMap) {//Map<String, EmailProperties> emailPropertiesMap) {
-        this.emailPropertiesMap = new HashMap<>();
-//        emailPropertiesMap.keySet()
-//                .parallelStream()
-//                .forEach(key ->
-//                        this.emailPropertiesMap.put(valueOf(key), emailPropertiesMap.get(key)));
-    }
 
     public SpringInjectedEmailPropertiesService(Map<String, EmailProperties> emailPropertiesMap) {
         this.emailPropertiesMap = new HashMap<>();
