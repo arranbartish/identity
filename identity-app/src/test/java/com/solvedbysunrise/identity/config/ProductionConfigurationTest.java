@@ -1,12 +1,8 @@
 package com.solvedbysunrise.identity.config;
 
 import com.solvedbysunrise.identity.config.exception.IncompleteConfiguration;
-import com.solvedbysunrise.identity.data.dto.EmailProperties;
-import com.solvedbysunrise.identity.data.entity.jpa.email.EmailType;
-import org.hamcrest.CoreMatchers;
+import com.solvedbysunrise.identity.service.EmailPropertiesService;
 import org.junit.Test;
-
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -23,8 +19,8 @@ public class ProductionConfigurationTest {
     }
 
     @Test
-    public void emailPropertiesMap_will_return_map() throws Exception {
-        //Map<String, EmailProperties> emailPropertiesMap = productionConfiguration.emailPropertiesMap();
-        //assertThat(emailPropertiesMap, is(notNullValue()));
+    public void emailPropertiesService_will_return_service() throws Exception {
+        EmailPropertiesService emailPropertiesService = productionConfiguration.emailPropertiesService();
+        assertThat(emailPropertiesService, is(notNullValue()));
     }
 }

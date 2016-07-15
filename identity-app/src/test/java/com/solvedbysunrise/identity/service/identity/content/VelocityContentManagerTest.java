@@ -4,6 +4,7 @@ import com.solvedbysunrise.identity.service.ContentKey;
 import com.solvedbysunrise.identity.service.VelocityContentManager;
 import com.solvedbysunrise.identity.service.velocity.ContentGenerator;
 import com.solvedbysunrise.identity.service.velocity.GenerationException;
+import com.solvedbysunrise.identity.service.velocity.MapBackedResolver;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -18,6 +20,8 @@ import static com.solvedbysunrise.identity.service.ContentKey.ACTIVATION_EMAIL_C
 import static com.solvedbysunrise.identity.service.dtto.ContentType.HTML;
 import static com.solvedbysunrise.identity.service.dtto.ContentType.TEXT;
 import static java.lang.String.format;
+import static java.util.Locale.ENGLISH;
+import static java.util.Locale.FRENCH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -27,8 +31,8 @@ public class VelocityContentManagerTest {
 
     private static final String HTML_CONTENT = "html";
     private static final String TEXT_CONTENT = "text";
-    private static final String ENGLISH_CODE = "en";
-    private static final String FRENCH_CODE = "fr";
+    private static final String ENGLISH_CODE = ENGLISH.getLanguage();
+    private static final String FRENCH_CODE = FRENCH.getLanguage();
 
     @InjectMocks
     private VelocityContentManager velocityContentManager;
@@ -56,13 +60,13 @@ public class VelocityContentManagerTest {
         languageCategorisedTextVelocityContentGeneratorMap.put(FRENCH_CODE, frenchTextGenerator);
         languageCategorisedTextVelocityContentGeneratorMap.put(ENGLISH_CODE, englishTextGenerator);
 
-        velocityContentManager.setLanguageCategorisedHtmlVelocityContentGeneratorMap(languageCategorisedHtmlVelocityContentGeneratorMap);
-        velocityContentManager.setLanguageCategorisedTextVelocityContentGeneratorMap(languageCategorisedTextVelocityContentGeneratorMap);
+        velocityContentManager.setHtmlVelocityContentGeneratorResolver(new MapBackedResolver(languageCategorisedHtmlVelocityContentGeneratorMap));
+        velocityContentManager.setTextVelocityContentGeneratorResolver(new MapBackedResolver(languageCategorisedTextVelocityContentGeneratorMap));
     }
 
     @Test
     public void testGenerateContent_Will_Return_French_HTML_When_Given_A_Valid_Key_And_ContentType() throws Exception {
-        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, HTML, FRENCH_CODE);
+        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, HTML, FRENCH);
 
         String expectedResult = format("%s %s", FRENCH_CODE, HTML_CONTENT);
         assertThat(content, is(expectedResult));
@@ -70,7 +74,7 @@ public class VelocityContentManagerTest {
 
     @Test
     public void testGenerateContent_Will_Return_English_HTML_When_Given_A_Valid_Key_And_ContentType() throws Exception {
-        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, HTML, ENGLISH_CODE);
+        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, HTML, ENGLISH);
 
         String expectedResult = format("%s %s", ENGLISH_CODE, HTML_CONTENT);
         assertThat(content, is(expectedResult));
@@ -78,7 +82,7 @@ public class VelocityContentManagerTest {
 
     @Test
     public void testGenerateContent_Will_Return_French_TEXT_When_Given_A_Valid_Key_And_ContentType() throws Exception {
-        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, TEXT, FRENCH_CODE);
+        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, TEXT, FRENCH);
 
         String expectedResult = format("%s %s", FRENCH_CODE, TEXT_CONTENT);
         assertThat(content, is(expectedResult));
@@ -86,7 +90,7 @@ public class VelocityContentManagerTest {
 
     @Test
     public void testGenerateContent_Will_Return_English_TEXT_When_Given_A_Valid_Key_And_ContentType() throws Exception {
-        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, TEXT, ENGLISH_CODE);
+        String content = velocityContentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, TEXT, ENGLISH);
 
         String expectedResult = format("%s %s", ENGLISH_CODE, TEXT_CONTENT);
         assertThat(content, is(expectedResult));

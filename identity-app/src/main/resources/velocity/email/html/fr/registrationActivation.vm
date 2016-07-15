@@ -1,0 +1,17 @@
+<p>Bonjour $displayName</p>
+
+<p><br>
+    $activationLink</p>
+
+<p>
+    <a href="https://www.example.com/about-us">about us</a></p>
+
+<p> <a href="$notMeLink">deactivate</a>
+    <br>
+    <br>
+    <a href="https://www.example.com/contact-us">contact us</a></p>
+
+<p>Merci<br>
+    The Team <br>
+    <a href="http://www.example.com/">http://www.example.com/</a></p>
+

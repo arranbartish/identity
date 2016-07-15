@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface WastedTimeConfiguration {
 
+    String identityBaseUrl();
+
     String wastedTimeUrl();
 
     String wastedTimeBaseUrl();

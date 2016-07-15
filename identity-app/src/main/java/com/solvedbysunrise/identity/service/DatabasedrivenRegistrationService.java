@@ -5,9 +5,11 @@ import com.solvedbysunrise.identity.data.dao.account.RegisteredUserDao;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
 import com.solvedbysunrise.identity.data.entity.jpa.user.RegisteredUser;
+import com.solvedbysunrise.identity.service.dtto.Account;
 import com.solvedbysunrise.identity.service.dtto.PersonalRegistrationRequest;
 import com.solvedbysunrise.identity.service.properties.ApplicationPropertiesService;
 import com.solvedbysunrise.identity.service.security.ApiKeyService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.solvedbysunrise.identity.data.entity.jpa.user.PhoneType.MOBILE;
 import static com.solvedbysunrise.identity.internationalization.LocaleUtil.convertToLocale;
 import static com.solvedbysunrise.identity.service.identity.enums.KnownRoles.REGISTERED_USER;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @Transactional
-public class DatabasedrivenPersonalRegistrationService extends AbstractIdentityService
-        implements PersonalRegistrationService {
+public class DatabasedrivenRegistrationService extends AbstractIdentityService
+        implements RegistrationService {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(DatabasedrivenPersonalRegistrationService.class);
+            .getLogger(DatabasedrivenRegistrationService.class);
 
     private final PasswordEncoder passwordEncoder;
 
@@ -42,7 +45,7 @@ public class DatabasedrivenPersonalRegistrationService extends AbstractIdentityS
     private static final String DEFAULT_ROLE = REGISTERED_USER.name();
 
     @Autowired
-    public DatabasedrivenPersonalRegistrationService(
+    public DatabasedrivenRegistrationService(
             final PasswordEncoder passwordEncoder,
             final RegisteredUserDao registeredUserDao,
             final RegisteredEntityDao entityDao,
@@ -58,7 +61,7 @@ public class DatabasedrivenPersonalRegistrationService extends AbstractIdentityS
     }
 
     @Override
-    public void createAccount(PersonalRegistrationRequest accountDetails) {
+    public Account createAccount(PersonalRegistrationRequest accountDetails) {
         LOGGER.debug(String.format("createAccount(%s)",
                 accountDetails.toString()));
 
@@ -90,7 +93,23 @@ public class DatabasedrivenPersonalRegistrationService extends AbstractIdentityS
                 registeredUser.toString()));
 
         apiKeyService.addNewAPIKeyToAccount(registeredEntity.getId());
-        sendEmailManager.sendRegistrationActivation(registeredUser.getId());
+        sendEmailManager.sendRegistrationActivation(registeredEntity.getId());
+        Account account = new Account();
+        account.setId(registeredEntity.getId());
+        account.setDisplayName(registeredEntity.getDisplayName());
+        return account;
+    }
+
+    @Override
+    public Account getAccount(Long accountId) {
+        BasicRegisteredEntity account = entityDao.findOne(accountId);
+        Account dto = new Account();
+        dto.setId(account.getId());
+        String displayName = isBlank(account.getDisplayName()) ?
+                account.getUsername() :
+                account.getDisplayName();
+        dto.setDisplayName(displayName);
+        return dto;
     }
 
     private String[] getDefaultRoles() {
