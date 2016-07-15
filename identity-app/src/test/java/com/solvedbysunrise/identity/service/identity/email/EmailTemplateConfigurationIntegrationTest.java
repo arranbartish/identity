@@ -16,10 +16,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import static java.lang.String.format;
+import static java.util.Locale.ENGLISH;
 import static org.apache.commons.lang3.ClassUtils.isAssignable;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -61,7 +63,7 @@ public class EmailTemplateConfigurationIntegrationTest  {
     public void htmlVelocityContentGeneratorMap_Will_Also_Have_A_Text_Template_In_Each_Language(){
         Set<Map.Entry<ContentKey, ContentGenerator>> entries = htmlVelocityContentGeneratorResolver.resolveAllEntries();
         for (Map.Entry<ContentKey, ContentGenerator> entry : entries) {
-            ContentGenerator contentGenerator = textVelocityContentGeneratorResolver.resolveContentGenerator(entry.getKey());
+            ContentGenerator contentGenerator = textVelocityContentGeneratorResolver.resolveContentGenerator(ENGLISH, entry.getKey());
             assertThat(format("email [%s] had html template but not a text version", entry.getKey().toString()), contentGenerator, is(notNullValue()));
         }
 
@@ -71,7 +73,7 @@ public class EmailTemplateConfigurationIntegrationTest  {
     public void textVelocityContentGeneratorMap_Will_Also_Have_A_HTML_Template_In_Each_Language(){
         Set<Map.Entry<ContentKey, ContentGenerator>> entries = textVelocityContentGeneratorResolver.resolveAllEntries();
         for (Map.Entry<ContentKey, ContentGenerator> entry : entries) {
-            ContentGenerator contentGenerator = htmlVelocityContentGeneratorResolver.resolveContentGenerator(entry.getKey());
+            ContentGenerator contentGenerator = htmlVelocityContentGeneratorResolver.resolveContentGenerator(ENGLISH, entry.getKey());
             assertThat(format("email [%s] had text template but not a html version", entry.getKey().toString()), contentGenerator, is(notNullValue()));
         }
     }

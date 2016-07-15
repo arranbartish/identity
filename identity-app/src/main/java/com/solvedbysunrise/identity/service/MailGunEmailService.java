@@ -1,31 +1,39 @@
 package com.solvedbysunrise.identity.service;
 
 
+import com.google.common.collect.Lists;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.dto.EmailProperties;
 import com.solvedbysunrise.identity.service.dtto.IdOnly;
 import com.solvedbysunrise.identity.service.dtto.PreparedEmail;
 import com.solvedbysunrise.identity.service.properties.ApplicationPropertiesService;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Lists.newArrayList;
 import static com.solvedbysunrise.identity.service.BasicAuthenticationBuilder.encodeUsernameAndPassword;
 import static java.lang.String.format;
+import static org.apache.commons.collections4.MapUtils.getString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.springframework.util.CollectionUtils.toMultiValueMap;
 import static org.springframework.web.util.UriComponentsBuilder.fromHttpUrl;
 
 @Service
@@ -75,14 +83,14 @@ public class MailGunEmailService implements SendEmailService{
 
         URI uri = fromHttpUrl(mailGunApiWithDomain).build().toUri();
 
-        Map<String, String> payload = generatePayload(preparedEmail, emailProperties);
+        Map<String, List<String>> payload = generatePayload(preparedEmail, emailProperties);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_FORM_URLENCODED);
         headers.add(AUTHORIZATION_HEADER, encodeUsernameAndPassword(MAILGUN_API,
                 applicationProperties.getMailGunApiKey()));
         @SuppressWarnings("unchecked")
-        RequestEntity request = new RequestEntity(payload, headers, GET, uri);
+        RequestEntity request = new RequestEntity(payload, headers, POST, uri);
 
         ResponseEntity<IdOnly> response = restTemplate.exchange(request, IdOnly.class);
 
@@ -90,35 +98,35 @@ public class MailGunEmailService implements SendEmailService{
 
     }
 
-    private Map<String, String> generatePayload(final PreparedEmail preparedEmail, final EmailProperties emailProperties) {
-        Map<String, String> payload = newHashMap();
+    private Map<String, List<String>> generatePayload(final PreparedEmail preparedEmail, final EmailProperties emailProperties) {
+        Map<String, List<String>> payload = toMultiValueMap(new HashMap<>());
 
-        payload.put(TRACKING, emailProperties.isTrackingEnabled());
-        payload.put(TRACKING_CLICK, emailProperties.isClickTrackingEnabled());
-        payload.put(TRACKING_OPEN, emailProperties.isOpenTrackingEnabled());
-        payload.put("v:guid", preparedEmail.getGuid());
+        payload.put(TRACKING, newArrayList(emailProperties.isTrackingEnabled()));
+        payload.put(TRACKING_CLICK, newArrayList(emailProperties.isClickTrackingEnabled()));
+        payload.put(TRACKING_OPEN, newArrayList(emailProperties.isOpenTrackingEnabled()));
+        payload.put("v:guid", newArrayList(preparedEmail.getGuid()));
 
         if(isNotBlank(emailProperties.getCampaign())) {
-            payload.put(CAMPAIGN, emailProperties.getCampaign());
+            payload.put(CAMPAIGN, newArrayList(emailProperties.getCampaign()));
         }
 
         final String fromAddress = format(emailProperties.getFromAddressPattern(),
                                           emailProperties.getFromAddressUser(),
                                         emailProperties.getFromAddressDomain());
-        payload.put(MAILGUN_FROM, fromAddress);
-        payload.put(MAILGUN_SUBJECT, emailProperties.getSubject());
+        payload.put(MAILGUN_FROM, newArrayList(fromAddress));
+        payload.put(MAILGUN_SUBJECT, newArrayList(emailProperties.getSubject()));
 
         Set<String> emailTags = emailProperties.getTags();
         for (String emailTag : emailTags) {
-            payload.put(TAG, emailTag);
+            payload.put(TAG, newArrayList(emailTag));
         }
 
-        payload.put(MAILGUN_TO, preparedEmail.getToAddress());
+        payload.put(MAILGUN_TO, newArrayList(preparedEmail.getToAddress()));
         if(isNotBlank(preparedEmail.getHtmlContent())) {
-            payload.put(MAILGUN_HTML, preparedEmail.getHtmlContent());
+            payload.put(MAILGUN_HTML, newArrayList(preparedEmail.getHtmlContent()));
         }
         if(isNotBlank(preparedEmail.getTextContent())) {
-            payload.put(MAILGUN_TEXT, preparedEmail.getTextContent());
+            payload.put(MAILGUN_TEXT, newArrayList(preparedEmail.getTextContent()));
         }
         return payload;
     }

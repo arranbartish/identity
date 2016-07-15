@@ -1,0 +1,23 @@
+<p>
+    <span>
+            Having trouble reading this mail? <a href="$viewInBrowserLink">click here</a>.
+    </span>
+</p>
+
+<p>
+    <span>Hi $displayName</span>
+</p>
+
+<p>
+    <span>
+        We've received a query!
+    </span>
+</p>
+
+<p>
+    <span>
+        <p>From:&nbsp;$name</p>
+        <p>Email:&nbsp;$email</p>
+        <p>Message:&nbsp;$message</p>
+    </span>
+</p>

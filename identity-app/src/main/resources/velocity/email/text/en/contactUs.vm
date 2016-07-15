@@ -1,0 +1,10 @@
+Having trouble reading this mail? View the html version in your browser.
+$viewInBrowserLink
+
+Hi $displayName
+
+We've received a query!
+
+From: $name
+Email: $email
+Message: $message

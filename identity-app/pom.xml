@@ -47,6 +47,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.solvedbysunrise.identity</groupId>
+			<artifactId>mock-server</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
         <dependency>
             <groupId>com.solvedbysunrise.identity</groupId>
             <artifactId>identity-interfaces</artifactId>
@@ -54,6 +60,10 @@
         <dependency>
             <groupId>com.solvedbysunrise.identity</groupId>
             <artifactId>identity-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.solvedbysunrise.identity</groupId>
+			<artifactId>dto</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
