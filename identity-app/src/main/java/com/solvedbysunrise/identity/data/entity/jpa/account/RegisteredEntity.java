@@ -2,23 +2,15 @@ package com.solvedbysunrise.identity.data.entity.jpa.account;
 
 import com.solvedbysunrise.identity.data.dao.account.ActivationState;
 import com.solvedbysunrise.identity.data.entity.jpa.ReflectiveEntity;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Locale;
 
 import static com.solvedbysunrise.identity.data.dao.account.ActivationState.*;
 import static com.solvedbysunrise.identity.internationalization.LocaleUtil.convertToLocale;
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 public abstract class RegisteredEntity extends ReflectiveEntity {
 
     public static final String REGISTERED_ENTITY_TABLE = "REGISTERED_ENTITY";
@@ -53,20 +45,6 @@ public abstract class RegisteredEntity extends ReflectiveEntity {
     @Column(name = "ACTIVATION_STATE", nullable = false)
     private ActivationState activationState = PENDING_ACTIVATION;
 
-    @Column(name = "CREATE_DATE", nullable = false, updatable = false)
-    @CreatedDate
-    @Temporal(TIMESTAMP)
-    private Date createDate;
-
-    @Column(name = "UPDATE_DATE")
-    @LastModifiedDate
-    @Temporal(TIMESTAMP)
-    private Date updateDate;
-
-    @Column(name = "UPDATE_BY", nullable = false)
-    @CreatedBy
-    @LastModifiedBy
-    private String updateBy;
 
     public Long getId() {
         return id;
@@ -177,29 +155,5 @@ public abstract class RegisteredEntity extends ReflectiveEntity {
     @Transient
     public Locale getLocale() {
         return convertToLocale(getLanguageCode(), getCountryCode());
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
     }
 }

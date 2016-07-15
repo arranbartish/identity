@@ -21,8 +21,6 @@
         <module>parent</module>
         <module>interfaces</module>
         <module>utils</module>
-        <module>dto</module>
-        <module>mock-server</module>
         <module>identity-app</module>
     </modules>
 

@@ -7,7 +7,7 @@ import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
 import com.solvedbysunrise.identity.data.entity.jpa.email.BasicEmail;
 import com.solvedbysunrise.identity.data.entity.jpa.email.ResetPasswordEmail;
-import com.solvedbysunrise.identity.service.SyncronousSendEmailManager;
+import com.solvedbysunrise.identity.service.AsyncronousSendEmailManager;
 import com.solvedbysunrise.identity.service.ContentKey;
 import com.solvedbysunrise.identity.service.ContentManager;
 import com.solvedbysunrise.identity.service.EmailService;
@@ -25,18 +25,19 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.solvedbysunrise.identity.data.entity.jpa.email.PasswordResetResultType.PENDING;
 import static java.util.Locale.CANADA_FRENCH;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SyncronousSendEmailManagerTest {
+public class AsyncronousSendEmailManagerTest {
 
     private static final String AN_ADDRESS = "some@address";
     private static final String A_UUID = "A_UUID";
@@ -70,7 +71,7 @@ public class SyncronousSendEmailManagerTest {
     private ResetPasswordEmailDao resetPasswordEmailDao;
 
     @InjectMocks
-    private SyncronousSendEmailManager syncronousSendEmailManager;
+    private AsyncronousSendEmailManager asyncronousSendEmailManager;
 
     @Captor
     private ArgumentCaptor<Date> dateCaptor;
@@ -93,9 +94,9 @@ public class SyncronousSendEmailManagerTest {
         when(applicationProperties.getEmailActivationLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
         when(applicationProperties.getEmailDeactivationLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
         when(applicationProperties.getEmailInBrowserLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
-        when(contentManager.generateContent(anyMap(), any(ContentKey.class), any(ContentType.class), any(Locale.class))).thenReturn(SOME_CONTENT);
+        when(contentManager.generateContent(anyMap(), Mockito.any(ContentKey.class), Mockito.any(ContentType.class), anyString())).thenReturn(SOME_CONTENT);
 
-        syncronousSendEmailManager.sendRegistrationActivation(ENTITY_ID);
+        asyncronousSendEmailManager.sendRegistrationActivation(ENTITY_ID);
 
         verify(emailService).sendEmail(guidCapture.capture());
 
@@ -116,7 +117,7 @@ public class SyncronousSendEmailManagerTest {
 
         when(basicEmailDao.findUnsentEmails((Pageable)notNull())).thenReturn(new PageImpl<>(emails));
 
-        syncronousSendEmailManager.resendAnyOldEmailsThatHaveNotBeenSent();
+        asyncronousSendEmailManager.resendAnyOldEmailsThatHaveNotBeenSent();
 
         verify(emailService, times(0)).sendEmail(anyString());
     }
@@ -135,7 +136,7 @@ public class SyncronousSendEmailManagerTest {
 
         when(basicEmailDao.findUnsentEmails((Pageable)notNull())).thenReturn(new PageImpl<>(emails));
 
-        syncronousSendEmailManager.resendAnyOldEmailsThatHaveNotBeenSent();
+        asyncronousSendEmailManager.resendAnyOldEmailsThatHaveNotBeenSent();
 
         verify(emailService, times(1)).sendEmail(A_UUID);
     }
@@ -149,9 +150,9 @@ public class SyncronousSendEmailManagerTest {
         when(applicationPropertiesService.getApplicationProperties()).thenReturn(applicationProperties);
         when(applicationProperties.getEmailPasswordResetLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
         when(applicationProperties.getEmailInBrowserLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
-        when(contentManager.generateContent(anyMap(), any(ContentKey.class), any(ContentType.class), any(Locale.class))).thenReturn(SOME_CONTENT);
+        when(contentManager.generateContent(anyMap(), Mockito.any(ContentKey.class), Mockito.any(ContentType.class), anyString())).thenReturn(SOME_CONTENT);
 
-        syncronousSendEmailManager.sendPasswordReset(ENTITY_ID);
+        asyncronousSendEmailManager.sendPasswordReset(ENTITY_ID);
 
         verify(emailService).sendEmail(guidCapture.capture());
         verify(resetPasswordEmail).invalidate();
@@ -170,10 +171,10 @@ public class SyncronousSendEmailManagerTest {
         when(applicationProperties.getEmailPasswordResetLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
         when(applicationProperties.getEmailInBrowserLinkStringTemplate()).thenReturn(SOME_LINK_TEMPLATE);
         when(applicationProperties.getRootAccountId()).thenReturn(ENTITY_ID);
-        when(contentManager.generateContent(anyMap(), any(ContentKey.class), any(ContentType.class), any(Locale.class))).thenReturn(SOME_CONTENT);
+        when(contentManager.generateContent(anyMap(), Mockito.any(ContentKey.class), Mockito.any(ContentType.class), anyString())).thenReturn(SOME_CONTENT);
 
         ContactUsRequest contactUsRequest = new ContactUsRequest("Sagar", "sagarshah1983@gmail.com", "I have a question for you.");
-        syncronousSendEmailManager.sendContactUsEmail(contactUsRequest);
+        asyncronousSendEmailManager.sendContactUsEmail(contactUsRequest);
 
 
         verify(emailService).sendEmail(guidCapture.capture());

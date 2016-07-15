@@ -18,13 +18,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.solvedbysunrise.identity.data.dto.EntitySummary.createEntitySummary;
@@ -34,16 +37,15 @@ import static com.solvedbysunrise.identity.service.ContentKey.*;
 import static com.solvedbysunrise.identity.service.dtto.ContentType.HTML;
 import static com.solvedbysunrise.identity.service.dtto.ContentType.TEXT;
 import static java.lang.String.format;
-import static java.util.stream.StreamSupport.stream;
 import static org.joda.time.DateTime.now;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @Service
 @Transactional
-public class SyncronousSendEmailManager implements SendEmailManager {
+public class AsyncronousSendEmailManager implements SendEmailManager {
 
-    static final Logger LOGGER = getLogger(SyncronousSendEmailManager.class);
+    static final Logger LOGGER = getLogger(AsyncronousSendEmailManager.class);
     private static final int FIRST_PAGE = 0;
     private static final boolean PARALLEL = true;
 
@@ -62,13 +64,13 @@ public class SyncronousSendEmailManager implements SendEmailManager {
     private final RegisteredEntityDao registeredEntityDao;
 
     @Autowired
-    public SyncronousSendEmailManager(final EmailService emailService,
-                                      final ContentManager contentManager,
-                                      final UniqueIdentifierService uniqueIdentifierService,
-                                      final ApplicationPropertiesService applicationPropertiesService,
-                                      final BasicEmailDao basicEmailDao,
-                                      final ResetPasswordEmailDao resetPasswordEmailDao,
-                                      final RegisteredEntityDao registeredEntityDao) {
+    public AsyncronousSendEmailManager(final EmailService emailService,
+                                       final ContentManager contentManager,
+                                       final UniqueIdentifierService uniqueIdentifierService,
+                                       final ApplicationPropertiesService applicationPropertiesService,
+                                       final BasicEmailDao basicEmailDao,
+                                       final ResetPasswordEmailDao resetPasswordEmailDao,
+                                       final RegisteredEntityDao registeredEntityDao) {
         this.emailService = emailService;
         this.contentManager = contentManager;
         this.uniqueIdentifierService = uniqueIdentifierService;
@@ -79,6 +81,7 @@ public class SyncronousSendEmailManager implements SendEmailManager {
     }
 
     @Override
+    @Async
     public void sendPasswordReset(final Long accountId) {
 
         RegisteredEntity registeredUser = registeredEntityDao.findOne(accountId);
@@ -91,8 +94,8 @@ public class SyncronousSendEmailManager implements SendEmailManager {
         values = prepareStandardEmailTemplateProperties(values, emailGuid, registeredUser);
         values = prepareResetPasswordEmailTemplateProperties(values, resetPasswordGuid);
 
-        final String htmlContent = contentManager.generateContent(values, RESET_PASSWORD_EMAIL_CONTENT, HTML, registeredUser.getLocale());
-        final String textContent = contentManager.generateContent(values, RESET_PASSWORD_EMAIL_CONTENT, TEXT, registeredUser.getLocale());
+        final String htmlContent = contentManager.generateContent(values, RESET_PASSWORD_EMAIL_CONTENT, HTML, registeredUser.getLanguageCode());
+        final String textContent = contentManager.generateContent(values, RESET_PASSWORD_EMAIL_CONTENT, TEXT, registeredUser.getLanguageCode());
 
         final EntitySummary
                 entitySummary = createEntitySummary(registeredUser.getPrimaryEmail(),
@@ -105,6 +108,7 @@ public class SyncronousSendEmailManager implements SendEmailManager {
     }
 
     @Override
+    @Async
     public void sendRegistrationActivation(final Long accountId) {
         RegisteredEntity registeredUser = registeredEntityDao.findOne(accountId);
         final String emailGuid = uniqueIdentifierService.generateUniqueIdentifier();
@@ -114,8 +118,8 @@ public class SyncronousSendEmailManager implements SendEmailManager {
         values = prepareStandardEmailTemplateProperties(values, emailGuid, registeredUser);
         values = prepareActivationEmailTemplateProperties(values, activationGuid);
 
-        final String htmlContent = contentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, HTML, registeredUser.getLocale());
-        final String textContent = contentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, TEXT, registeredUser.getLocale());
+        final String htmlContent = contentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, HTML, registeredUser.getLanguageCode());
+        final String textContent = contentManager.generateContent(values, ACTIVATION_EMAIL_CONTENT, TEXT, registeredUser.getLanguageCode());
 
         final EntitySummary entitySummary = createEntitySummary(registeredUser.getPrimaryEmail(),
                 registeredUser.getId(),
@@ -128,6 +132,7 @@ public class SyncronousSendEmailManager implements SendEmailManager {
     }
 
     @Override
+    @Async
     public void resendAnyOldEmailsThatHaveNotBeenSent() {
         LOGGER.debug("Starting: resendAnyOldEmailsThatHaveNotBeenSent");
 
@@ -138,7 +143,7 @@ public class SyncronousSendEmailManager implements SendEmailManager {
         Page<BasicEmail> unsentEmails = basicEmailDao.findUnsentEmails(pageable);
 
 
-        try (Stream<BasicEmail> stream = stream(unsentEmails.spliterator(), PARALLEL)) {
+        try (Stream<BasicEmail> stream = StreamSupport.stream(unsentEmails.spliterator(), PARALLEL)) {
             stream
                     .filter(basicEmail -> emailsProbablyNotSent.after(basicEmail.getCreateDate()))
                     .forEach(basicEmail -> emailService.sendEmail(basicEmail.getGuid()));
@@ -147,6 +152,7 @@ public class SyncronousSendEmailManager implements SendEmailManager {
     }
 
     @Override
+    @Async
     public void sendContactUsEmail(final ContactUsRequest contactUsRequest) {
         final String emailGuid = uniqueIdentifierService.generateUniqueIdentifier();
         ApplicationProperties applicationProperties = applicationPropertiesService.getApplicationProperties();
@@ -158,8 +164,8 @@ public class SyncronousSendEmailManager implements SendEmailManager {
         values.put("message", contactUsRequest.getMessage());
         values = prepareStandardEmailTemplateProperties(values, emailGuid, registeredUser);
 
-        final String htmlContent = contentManager.generateContent(values, CONTACT_US_EMAIL_CONTENT, HTML, registeredUser.getLocale());
-        final String textContent = contentManager.generateContent(values, CONTACT_US_EMAIL_CONTENT, TEXT, registeredUser.getLocale());
+        final String htmlContent = contentManager.generateContent(values, CONTACT_US_EMAIL_CONTENT, HTML, registeredUser.getLanguageCode());
+        final String textContent = contentManager.generateContent(values, CONTACT_US_EMAIL_CONTENT, TEXT, registeredUser.getLanguageCode());
 
         final EntitySummary entitySummary = createEntitySummary(registeredUser.getPrimaryEmail(),
                 registeredUser.getId(),

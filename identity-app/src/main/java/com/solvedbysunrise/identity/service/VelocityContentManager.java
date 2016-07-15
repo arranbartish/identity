@@ -5,41 +5,43 @@ import com.solvedbysunrise.identity.service.velocity.ContentGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
 import java.util.Map;
 
 @Service
 public class VelocityContentManager implements ContentManager {
 
-    private VelocityContentGeneratorResolver textVelocityContentGeneratorResolver;
+    private Map<String, Map<ContentKey, ContentGenerator>> languageCategorisedHtmlVelocityContentGeneratorMap;
 
-    private VelocityContentGeneratorResolver htmlVelocityContentGeneratorResolver;
+    private Map<String, Map<ContentKey, ContentGenerator>> languageCategorisedTextVelocityContentGeneratorMap;
 
     @Autowired
-    public VelocityContentManager(VelocityContentGeneratorResolver textVelocityContentGeneratorResolver, VelocityContentGeneratorResolver htmlVelocityContentGeneratorResolver) {
-        this.textVelocityContentGeneratorResolver = textVelocityContentGeneratorResolver;
-        this.htmlVelocityContentGeneratorResolver = htmlVelocityContentGeneratorResolver;
+    public VelocityContentManager(Map<String, Map<ContentKey, ContentGenerator>> languageCategorisedHtmlVelocityContentGeneratorMap, Map<String, Map<ContentKey, ContentGenerator>> languageCategorisedTextVelocityContentGeneratorMap) {
+        this.languageCategorisedHtmlVelocityContentGeneratorMap = languageCategorisedHtmlVelocityContentGeneratorMap;
+        this.languageCategorisedTextVelocityContentGeneratorMap = languageCategorisedTextVelocityContentGeneratorMap;
     }
 
     @Override
-    public String generateContent(final Map<String, Object> values, final ContentKey contentKey, final ContentType type, final Locale locale) {
-        ContentGenerator contentGenerator = null;
+    public String generateContent(final Map<String, Object> values, final ContentKey contentKey, final ContentType type, final String language) {
+        Map<ContentKey, ContentGenerator> contentGenerators = null;
+
         switch (type) {
             case HTML:
-                contentGenerator = htmlVelocityContentGeneratorResolver.resolveContentGenerator(locale, contentKey);
+                contentGenerators = languageCategorisedHtmlVelocityContentGeneratorMap.get(language);
                 break;
             case TEXT:
-                contentGenerator = textVelocityContentGeneratorResolver.resolveContentGenerator(locale, contentKey);
+                contentGenerators = languageCategorisedTextVelocityContentGeneratorMap.get(language);
                 break;
         }
+
+        ContentGenerator contentGenerator = contentGenerators.get(contentKey);
         return contentGenerator.generateTemplateContent(values);
     }
 
-    public void setTextVelocityContentGeneratorResolver(VelocityContentGeneratorResolver textVelocityContentGeneratorResolver) {
-        this.textVelocityContentGeneratorResolver = textVelocityContentGeneratorResolver;
+    public void setLanguageCategorisedHtmlVelocityContentGeneratorMap(Map<String, Map<ContentKey, ContentGenerator>> languageCategorisedHtmlVelocityContentGeneratorMap) {
+        this.languageCategorisedHtmlVelocityContentGeneratorMap = languageCategorisedHtmlVelocityContentGeneratorMap;
     }
 
-    public void setHtmlVelocityContentGeneratorResolver(VelocityContentGeneratorResolver htmlVelocityContentGeneratorResolver) {
-        this.htmlVelocityContentGeneratorResolver = htmlVelocityContentGeneratorResolver;
+    public void setLanguageCategorisedTextVelocityContentGeneratorMap(Map<String, Map<ContentKey, ContentGenerator>> languageCategorisedTextVelocityContentGeneratorMap) {
+        this.languageCategorisedTextVelocityContentGeneratorMap = languageCategorisedTextVelocityContentGeneratorMap;
     }
 }

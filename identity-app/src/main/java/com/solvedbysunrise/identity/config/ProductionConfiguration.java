@@ -21,9 +21,6 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.*;
-import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.CONTACT_US;
-import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.REGISTRATION_ACTIVATION;
-import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.RESET_PASSWORD;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -49,19 +46,19 @@ public class ProductionConfiguration implements WastedTimeConfiguration {
     @Value("${interval.in.minutes:15}")
     private Integer intervalInMinutes;
 
-    @Value("${mailgun.api.url.pattern:http://api.mailgun.net/v2/%s/messages}")
+    @Value("${mailgun.api.url.pattern:http://api.mailgun.net/v2/receiptdrop.mailgun.org/messages}")
     private String mailgunApiUrlPattern;
 
     @Value("${mailgun.api.key:YeahRight}")
     private String mailgunApiKey;
 
-    @Value("${email.activationLinkStringTemplate:https://identity.example.com/activate/%s}")
+    @Value("${email.activationLinkStringTemplate:https://identity.receiptdrop.com/activate/%s}")
     private String emailActivationLinkStringTemplate;
 
-    @Value("${email.deactivationLinkStringTemplate:https://identity.example.com/deactivate/%s}")
+    @Value("${email.deactivationLinkStringTemplate:https://identity.receiptdrop.com/deactivate/%s}")
     private String emailDeactivationLinkStringTemplate;
 
-    @Value("${email.passwordResetLinkStringTemplate:https://identity.example.com/password-reset/%s}")
+    @Value("${email.passwordResetLinkStringTemplate:https://identity.receiptdrop.com/password-reset/%s}")
     private String emailPasswordResetLinkStringTemplate;
 
     @Value("${email.resendTimeInSeconds:21600}")
@@ -73,7 +70,7 @@ public class ProductionConfiguration implements WastedTimeConfiguration {
     @Value("${current.passwordVersion:1}")
     private String currentPasswordVersion;
 
-    @Value("${email.in.browserLinkStringTemplate:https://identity.example.com/view/email/%s}")
+    @Value("${email.in.browserLinkStringTemplate:https://identity.receiptdrop.com/view/email/%s}")
     private String emailInBrowserLinkStringTemplate;
 
     @Value("${is.audit.enabled:false}")
@@ -88,93 +85,9 @@ public class ProductionConfiguration implements WastedTimeConfiguration {
     @Value("${maxAgeOfMessageInMillis:60000}")
     private String maxAgeOfMessageInMillis;
 
-@Value("${contactUs.fromAddressDomain:email.example.com}")
-private String contactUsFromAddressDomain;
-
-    @Value("${contactUs.fromAddressPattern:Accounts <%s@%s>}")
-    private String contactUsFromAddressPattern;
-
-    @Value("${contactUs.fromAddressUser:contact.us}")
-    private String contactUsFromAddressUser;
-
-    @Value("${contactUs.isClickTrackingEnabled:true}")
-    private String contactUsIsClickTrackingEnabled;
-
-    @Value("${contactUs.isOpenTrackingEnabled:true}")
-    private String contactUsIsOpenTrackingEnabled;
-
-    @Value("${contactUs.isTrackingEnabled:true}")
-    private String contactUsIsTrackingEnabled;
-
-    @Value("${contactUs.subject:Contact us Query}")
-    private String contactUsSubject;
-
-    @Value("${contactUs.tag1:CONTACT_US}")
-    private String contactUsTag1;
-
-    @Value("${registrationActivation.campaign:registration}")
-    private String registrationActivationCampaign;
-
-    @Value("${registrationActivation.fromAddressDomain:email.example.com}")
-    private String registrationActivationFromAddressDomain;
-
-    @Value("${registrationActivation.fromAddressPattern:Accounts <%s@%s>}")
-    private String registrationActivationFromAddressPattern;
-
-    @Value("${registrationActivation.fromAddressUser:registrations}")
-    private String registrationActivationFromAddressUser;
-
-    @Value("${registrationActivation.isClickTrackingEnabled:true}")
-    private String registrationActivationIsClickTrackingEnabled;
-
-    @Value("${registrationActivation.isOpenTrackingEnabled:true}")
-    private String registrationActivationIsOpenTrackingEnabled;
-
-    @Value("${registrationActivation.isTrackingEnabled:true}")
-    private String registrationActivationIsTrackingEnabled;
-
-    @Value("${registrationActivation.subject:Welcome to The App}")
-    private String registrationActivationSubject;
-
-    @Value("${registrationActivation.tag1:REGISTRATION_ACTIVATION}")
-    private String registrationActivationTag1;
-
-    @Value("${resetPassword.campaign:registration}")
-    private String resetPasswordCampaign;
-
-    @Value("${resetPassword.fromAddressDomain:email.example.com}")
-    private String resetPasswordFromAddressDomain;
-
-    @Value("${resetPassword.fromAddressPattern:Accounts <%s@%s>}")
-    private String resetPasswordFromAddressPattern;
-
-    @Value("${resetPassword.fromAddressUser:reset.password}")
-    private String resetPasswordFromAddressUser;
-
-    @Value("${resetPassword.isClickTrackingEnabled:true}")
-    private String resetPasswordIsClickTrackingEnabled;
-
-    @Value("${resetPassword.isOpenTrackingEnabled:true}")
-    private String resetPasswordIsOpenTrackingEnabled;
-
-    @Value("${resetPassword.isTrackingEnabled:true}")
-    private String resetPasswordIsTrackingEnabled;
-
-    @Value("${resetPassword.subject:Reset your password}")
-    private String resetPasswordSubject;
-
-    @Value("${resetPassword.tag1:RESET_PASSWORD}")
-    private String resetPasswordTag1;
-
     @Override
     @Bean(name = "wastedTimeBaseUrl")
     public String wastedTimeBaseUrl() {
-        return baseUrl;
-    }
-
-    @Override
-    @Bean(name = "identityBaseUrl")
-    public String identityBaseUrl() {
         return baseUrl;
     }
 
@@ -229,6 +142,7 @@ private String contactUsFromAddressDomain;
         applicationProperties.put(ROOT_ACCOUNT_ID.getKey(), rootAccountId);
         applicationProperties.put(MAX_AGE_OF_MESSAGE_IN_MILLIS.getKey(), maxAgeOfMessageInMillis);
 
+
         List<Key> unpamppedKeys = new ArrayList<>();
         try (Stream<Key> keys = stream(values())) {
             unpamppedKeys.addAll(
@@ -246,46 +160,10 @@ private String contactUsFromAddressDomain;
     }
 
     @Bean
-    public EmailPropertiesService emailPropertiesService() {
-        EmailProperties contactUsProperties = new EmailProperties();
-        contactUsProperties.put(EmailProperties.FROM_ADDRESS_DOMAIN, contactUsFromAddressDomain);
-        contactUsProperties.put(EmailProperties.FROM_ADDRESS_PATTERN, contactUsFromAddressPattern);
-        contactUsProperties.put(EmailProperties.FROM_ADDRESS_USER, contactUsFromAddressUser);
-        contactUsProperties.put(EmailProperties.IS_CLICK_TRACKING_ENABLED, contactUsIsClickTrackingEnabled);
-        contactUsProperties.put(EmailProperties.IS_OPEN_TRACKING_ENABLED, contactUsIsOpenTrackingEnabled);
-        contactUsProperties.put(EmailProperties.IS_TRACKING_ENABLED, contactUsIsTrackingEnabled);
-        contactUsProperties.put(EmailProperties.SUBJECT, contactUsSubject);
-        contactUsProperties.put(EmailProperties.TAG_ONE, contactUsTag1);
-
-        EmailProperties registrationProperties = new EmailProperties();
-        registrationProperties.put(EmailProperties.CAMPAIGN, registrationActivationCampaign);
-        registrationProperties.put(EmailProperties.FROM_ADDRESS_DOMAIN, registrationActivationFromAddressDomain);
-        registrationProperties.put(EmailProperties.FROM_ADDRESS_PATTERN, registrationActivationFromAddressPattern);
-        registrationProperties.put(EmailProperties.FROM_ADDRESS_USER, registrationActivationFromAddressUser);
-        registrationProperties.put(EmailProperties.IS_CLICK_TRACKING_ENABLED, registrationActivationIsClickTrackingEnabled);
-        registrationProperties.put(EmailProperties.IS_OPEN_TRACKING_ENABLED, registrationActivationIsOpenTrackingEnabled);
-        registrationProperties.put(EmailProperties.IS_TRACKING_ENABLED, registrationActivationIsTrackingEnabled);
-        registrationProperties.put(EmailProperties.SUBJECT, registrationActivationSubject);
-        registrationProperties.put(EmailProperties.TAG_ONE, registrationActivationTag1);
-
-        EmailProperties resetPasswordProperties = new EmailProperties();
-        resetPasswordProperties.put(EmailProperties.CAMPAIGN, resetPasswordCampaign);
-        resetPasswordProperties.put(EmailProperties.FROM_ADDRESS_DOMAIN, resetPasswordFromAddressDomain);
-        resetPasswordProperties.put(EmailProperties.FROM_ADDRESS_PATTERN, resetPasswordFromAddressPattern);
-        resetPasswordProperties.put(EmailProperties.FROM_ADDRESS_USER, resetPasswordFromAddressUser);
-        resetPasswordProperties.put(EmailProperties.IS_CLICK_TRACKING_ENABLED, resetPasswordIsClickTrackingEnabled);
-        resetPasswordProperties.put(EmailProperties.IS_OPEN_TRACKING_ENABLED, resetPasswordIsOpenTrackingEnabled);
-        resetPasswordProperties.put(EmailProperties.IS_TRACKING_ENABLED, resetPasswordIsTrackingEnabled);
-        resetPasswordProperties.put(EmailProperties.SUBJECT, resetPasswordSubject);
-        resetPasswordProperties.put(EmailProperties.TAG_ONE, resetPasswordTag1);
-
+    public EmailPropertiesService emailPropertiesMap() {
         Map<String, EmailProperties> emailPropertiesMap = newHashMap();
-
-        emailPropertiesMap.put(REGISTRATION_ACTIVATION.name(), registrationProperties);
-        emailPropertiesMap.put(CONTACT_US.name(), contactUsProperties);
-        emailPropertiesMap.put(RESET_PASSWORD.name(), resetPasswordProperties);
+        emailPropertiesMap.put(EmailType.REGISTRATION_ACTIVATION.name(), new EmailProperties());
 
         return new SpringInjectedEmailPropertiesService(emailPropertiesMap);
     }
-
 }

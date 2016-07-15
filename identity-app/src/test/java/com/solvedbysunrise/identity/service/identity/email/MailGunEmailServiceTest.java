@@ -1,6 +1,5 @@
 package com.solvedbysunrise.identity.service.identity.email;
 
-import com.google.common.collect.Lists;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.dto.EmailProperties;
 import com.solvedbysunrise.identity.service.EmailPropertiesService;
@@ -19,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.MAIL_GUN_API_KEY;
 import static com.solvedbysunrise.identity.data.dto.ApplicationProperties.Key.MAIL_GUN_API_URL_PATTERN;
 import static com.solvedbysunrise.identity.data.entity.jpa.email.EmailType.REGISTRATION_ACTIVATION;
@@ -86,11 +84,11 @@ public class MailGunEmailServiceTest {
 
         assertThat(confirmationId, is(CONFIRMATION_ID));
         assertThat(payload, allOf(
-                hasEntry(MailGunEmailService.CAMPAIGN, newArrayList(VALUE)),
-                hasEntry(MailGunEmailService.MAILGUN_FROM, newArrayList(VALUE)),
-                hasEntry(MailGunEmailService.MAILGUN_SUBJECT, newArrayList(VALUE)),
-                hasEntry(MailGunEmailService.MAILGUN_TO, newArrayList(ADDRESS)),
-                hasEntry(MailGunEmailService.MAILGUN_HTML, newArrayList(CONTENT)),
+                hasEntry(MailGunEmailService.CAMPAIGN, VALUE),
+                hasEntry(MailGunEmailService.MAILGUN_FROM, VALUE),
+                hasEntry(MailGunEmailService.MAILGUN_SUBJECT, VALUE),
+                hasEntry(MailGunEmailService.MAILGUN_TO, ADDRESS),
+                hasEntry(MailGunEmailService.MAILGUN_HTML, CONTENT),
                 hasEntry(is(MailGunEmailService.TRACKING), is(notNullValue())),
                 hasEntry(is(MailGunEmailService.TRACKING), is(notNullValue())),
                 hasEntry(is(MailGunEmailService.TRACKING_OPEN), is(notNullValue())),
@@ -135,6 +133,8 @@ public class MailGunEmailServiceTest {
      }
 
     private IdOnly buildResponse(){
-        return new IdOnly(CONFIRMATION_ID);
+        IdOnly id = new IdOnly();
+        id.setId(CONFIRMATION_ID);
+        return id;
     }
 }

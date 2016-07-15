@@ -5,7 +5,7 @@ import com.solvedbysunrise.identity.data.dao.account.RegisteredUserDao;
 import com.solvedbysunrise.identity.data.dto.ApplicationProperties;
 import com.solvedbysunrise.identity.data.entity.jpa.account.BasicRegisteredEntity;
 import com.solvedbysunrise.identity.data.entity.jpa.user.RegisteredUser;
-import com.solvedbysunrise.identity.service.DatabasedrivenRegistrationService;
+import com.solvedbysunrise.identity.service.DatabasedrivenPersonalRegistrationService;
 import com.solvedbysunrise.identity.service.SendEmailManager;
 import com.solvedbysunrise.identity.service.dtto.Address;
 import com.solvedbysunrise.identity.service.dtto.PersonalRegistrationRequest;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DatabasedrivenRegistrationServiceTest {
+public class DatabasedrivenPersonalRegistrationServiceTest {
 
 	private static final String STREET = "209/28 Queensbridge St";
 
@@ -97,7 +97,7 @@ public class DatabasedrivenRegistrationServiceTest {
     private ArgumentCaptor<BasicRegisteredEntity> entityCaptor;
 
 	@InjectMocks
-	private DatabasedrivenRegistrationService personalRegistrationService;
+	private DatabasedrivenPersonalRegistrationService personalRegistrationService;
 
 	@Before
 	public void setup() {
@@ -127,7 +127,7 @@ public class DatabasedrivenRegistrationServiceTest {
 	    assertThat(registeredUser.getPrimaryPhone(), is(PHONE_NUMBER));
 	    assertThat(registeredUser.getPrimaryPhoneType(), notNullValue());
 
-        verify(sendEmailManager).sendRegistrationActivation(0L);
+        verify(sendEmailManager).sendRegistrationActivation(registeredUser.getId());
 	}
 	
 	private PersonalRegistrationRequest buildRegistrationRequest() {
