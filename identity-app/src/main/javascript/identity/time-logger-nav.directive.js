@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    require('./time-logger-nav-style.css');
+    require('./time-logger-nav-style.scss');
     function TimeLoggerNavDirective() {
         return {
             restrict: 'E',

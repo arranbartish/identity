@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  require('./time-entries-style.css');
+  require('./time-entries-style.scss');
   function TimeEntriesDirective(timeLogger) {
     return {
       restrict: 'E',

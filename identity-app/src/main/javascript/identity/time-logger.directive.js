@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    require('./time-logger-style.css');
+    require('./time-logger-style.scss');
     var moment = require('moment');
 
     function TimeLoggerDirective() {

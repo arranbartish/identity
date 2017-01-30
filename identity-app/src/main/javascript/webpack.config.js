@@ -19,9 +19,10 @@
         { test: /\.js$/, exclude: [/node_modules/], loader: 'jshint-loader' }
       ],
       loaders: [
-        {test: /\.js$/, loader: 'ng-annotate'},
-        {test: /\.css$/, loaders: ['style', 'css']},
-        {test: /\.html$/, loader: 'raw'}
+          {test: /\.js$/, loader: 'ng-annotate'},
+          {test: /\.css$/, loaders: ['style', 'css']},
+          {test: /\.scss$/, loaders: ['style', 'css', 'sass-loader']},
+          {test: /\.html$/, loader: 'raw'}
       ]
     },
     plugins: [
