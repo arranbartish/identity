@@ -68,9 +68,9 @@ module: {
 
 ### Embed HTML Partials in Bundle (tag: **html-partial**)
 
-* In the browser dev tools, observe that your browser makes two requests: one for `time-logger.js` (the bundle), and one for `time-logger-nav.html` (NOTE: you may need to reload the browser page to see the two files). `time-logger-nav.html` is the HTML partial for the navigation bar at the top of the application. Since it's a necessary part of the application, we would like to include it in the bundle.
+* In the browser dev tools, observe that your browser makes two requests: one for `identity.js` (the bundle), and one for `identity-nav.html` (NOTE: you may need to reload the browser page to see the two files). `identity-nav.html` is the HTML partial for the navigation bar at the top of the application. Since it's a necessary part of the application, we would like to include it in the bundle.
 
-* Open `time-logger/time-logger-nav.directive.js` in your editor. Make the following change:
+* Open `identity/identity-nav.directive.js` in your editor. Make the following change:
 
 ```js
 function TimeLoggerNavDirective() {
@@ -106,7 +106,7 @@ Our client has asked for a new feature. Instead of having and entry form with th
 
 #### What Do We Already Have?
 
-We already have the code to implement this feature in our source code. The entry point for the new feature is found in `time-logger-registrationpointing to the new version of the application (`app-2.js`). `app-2.js` replaces the reference to the current Angular entry form directive (`time-entry-form.directive.js`) with the "smart" version (`v2/time-entry-smart.directive.js`).
+We already have the code to implement this feature in our source code. The entry point for the new feature is found in `identity-registrationpointing to the new version of the application (`app-2.js`). `app-2.js` replaces the reference to the current Angular entry form directive (`time-entry-form.directive.js`) with the "smart" version (`v2/time-entry-smart.directive.js`).
 
 #### What Do We Need to Do?
 
@@ -123,13 +123,13 @@ We simply need to tell Webpack to build the new entry point in addition to the c
   },
 ```
 
-We have told Webpack that we have two entry points: `./registration-app.js` and `./time-loregistrationjs`, and have naregistrationdles `time-logger` and `time-logger-2`, registrationy. We aregistratione of Webpack's metadata properties, `[name]` to tell Webpack to use the bundle name property as the filename. So, we end up with two bundle output files: `time-logger.js` and `time-logger-2registrationn `npm runregistrationd refresh your browser. The app should work as before.
+We have told Webpack that we have two entry points: `./registration-app.js` and `./time-loregistrationjs`, and have naregistrationdles `identity` and `identity-2`, registrationy. We aregistratione of Webpack's metadata properties, `[name]` to tell Webpack to use the bundle name property as the filename. So, we end up with two bundle output files: `identity.js` and `identity-2registrationn `npm runregistrationd refresh your browser. The app should work as before.
 * Navigate to `http://localhost:8080/index-2.html`. You should see the same time logger with the "smart" entry form.
 
 ### Optimize the Application Using CommonsChunkPlugin (tag: **commons-chunk**)
 
-* In the browser dev tools, look for the `time-logger.js` or `time-logger-2.registrationquest. Noregistrationhe size of the file is about 1.4MB. This file is too big, especially when both versions of the applications share mostly the same code. Let's combine the common code into a separate bundle.
-* Before we make the changes, stop the webpack dev server and run `webpack` in the terminal. Observe how long it takes to run the webpack, and look at the files sizes. `time-logger-1.js` and `time-loggerregistrationld both be tregistratione, which is around 1.4MB.
+* In the browser dev tools, look for the `identity.js` or `time-logger-2.registrationquest. Noregistrationhe size of the file is about 1.4MB. This file is too big, especially when both versions of the applications share mostly the same code. Let's combine the common code into a separate bundle.
+* Before we make the changes, stop the webpack dev server and run `webpack` in the terminal. Observe how long it takes to run the webpack, and look at the files sizes. `identity-1.js` and `time-loggerregistrationld both be tregistratione, which is around 1.4MB.
 * In `webpack.config.js`, make the following changes:
 
 ```js
@@ -162,8 +162,8 @@ Of course, we also need to tell the web page to load this file along with the ap
 <script src="time-logger-2.js"></script>
 ```
 
-* Run `webpack` again. Notice that the build is not only slightly faster, but look at the file sizes. Since `time-logger-1.js` and `time-loggerregistrationain the coderegistrationeach app, they are very small. There is a new file now, `common.js`, that contains the bulk of the code. We made this optimization without changing a single line of application code!
-* Run `npm run watch`, then refresh the browser window. In the browser dev tools, you should now see two requests: one for `common.js` and one for the time-logger app file (`time-logger-1.js` or `time-logger-registrationnding on whregistrationu're on).
+* Run `webpack` again. Notice that the build is not only slightly faster, but look at the file sizes. Since `identity-1.js` and `time-loggerregistrationain the coderegistrationeach app, they are very small. There is a new file now, `common.js`, that contains the bulk of the code. We made this optimization without changing a single line of application code!
+* Run `npm run watch`, then refresh the browser window. In the browser dev tools, you should now see two requests: one for `common.js` and one for the time-logger app file (`identity-1.js` or `time-logger-registrationnding on whregistrationu're on).
 
 ### Optimize the Application Using Externals (tag: **externals**)
 
