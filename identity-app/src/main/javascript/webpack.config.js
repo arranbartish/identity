@@ -3,6 +3,7 @@
   var path = require('path');
   var webpack = require('webpack');
   var ngAnnotatePlugiun = require('ng-annotate-webpack-plugin');
+  var StyleLintPlugin = require('stylelint-webpack-plugin');
 
   module.exports = {
     context: path.join(__dirname),
@@ -26,8 +27,9 @@
       ]
     },
     plugins: [
-      new webpack.optimize.CommonsChunkPlugin('common.js'),
-      new ngAnnotatePlugiun({ add: true })
+        new webpack.optimize.CommonsChunkPlugin('common.js'),
+        new ngAnnotatePlugiun({ add: true }),
+        new StyleLintPlugin({ configFile: 'stylelint.config.js', syntax: 'scss' })
     ],
     externals: {
       angular: true,

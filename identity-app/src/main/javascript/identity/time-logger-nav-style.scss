@@ -5,7 +5,8 @@
   align-items: center;
 }
 
-.time-logger-nav .prev, .time-logger-nav .next {
+.time-logger-nav .prev,
+.time-logger-nav .next {
   text-decoration: none;
   color: black;
   border: solid 1px black;
@@ -14,7 +15,8 @@
   background-color: #eee;
 }
 
-.time-logger-nav .prev:hover, .time-logger-nav .next:hover {
+.time-logger-nav .prev:hover,
+.time-logger-nav .next:hover {
   border-width: 2px;
   padding: 3px;
 }
