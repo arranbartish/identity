@@ -9,7 +9,7 @@
   },
   "private": true,
   "scripts": {
-    "clean": "rimraf time-logger.js time-logger.js.map time-logger-2.js time-logger-2.js.map common.js common.js.map",
+    "clean": "rimraf identity.js identity.js.map common.js common.js.map",
     "start": "webpack && http-server -p 8080",
     "watch": "webpack-dev-server --hot --inline --config webpack.config.js"
   },

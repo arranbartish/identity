@@ -12,3 +12,9 @@ buildNumber.properties
 .mvn
 *.pem
 node_modules
+common.js
+common.js.map
+identity.js
+identity.js.map
+npm-debug.log
+
