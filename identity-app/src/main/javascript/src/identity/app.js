@@ -11,14 +11,14 @@
         $routeProvider.otherwise('/' + moment().format('YYYY-MM-DD'));
     });
 
-    require('./moment.filter')(ngModule);
-    require('./timeLogger.service')(ngModule);
+    require('./moment.filter.js')(ngModule);
+    require('./timeLogger.service.js')(ngModule);
 
-    require('./time-logger.directive')(ngModule);
-    require('./time-logger-nav.directive')(ngModule);
-    require('./time-entries.directive')(ngModule);
+    require('./time-logger.directive.js')(ngModule);
+    require('./time-logger-nav.directive.js')(ngModule);
+    require('./time-entries.directive.js')(ngModule);
 
-    require('./time-entry-form.directive')(ngModule);
+    require('./time-entry-form.directive.js')(ngModule);
 
     module.exports = ngModule;
 })();

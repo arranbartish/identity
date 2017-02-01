@@ -4,17 +4,20 @@
   var webpack = require('webpack');
   var ngAnnotatePlugiun = require('ng-annotate-webpack-plugin');
   var StyleLintPlugin = require('stylelint-webpack-plugin');
+  var distLocation = path.join(__dirname, 'dist');
+  console.log('distlocation: ' + distLocation);
 
   module.exports = {
-    context: path.join(__dirname),
+    context: distLocation,
     entry: [
-        './identity-app.js',
+        './src/identity-app.js',
         'webpack/hot/dev-server',
         'webpack-dev-server/client?http://localhost:8080'
     ],
     output: {
-      path: path.join(__dirname),
-      filename: 'identity.js'
+        path: distLocation,
+        publicPath: '/dist/',
+        filename: 'identity.js'
     },
     devtool: 'source-map',
     module: {
