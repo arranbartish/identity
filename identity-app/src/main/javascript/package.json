@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "rimraf identity.js identity.js.map common.js common.js.map",
     "start": "webpack && http-server -p 8080",
-    "watch": "webpack-dev-server --hot --inline --config webpack.config.js"
+    "watch": "node dev-server.js"
   },
   "author": "Jeremy Lund <jeremylund@workfront.com>",
   "license": "Apache-2.0",

@@ -7,12 +7,14 @@
 
   module.exports = {
     context: path.join(__dirname),
-    entry: {
-      'identity': './identity-app.js'
-    },
+    entry: [
+        './identity-app.js',
+        'webpack/hot/dev-server',
+        'webpack-dev-server/client?http://localhost:8080'
+    ],
     output: {
       path: path.join(__dirname),
-      filename: '[name].js'
+      filename: 'identity.js'
     },
     devtool: 'source-map',
     module: {
@@ -29,7 +31,8 @@
     plugins: [
         new webpack.optimize.CommonsChunkPlugin('common.js'),
         new ngAnnotatePlugiun({ add: true }),
-        new StyleLintPlugin({ configFile: 'stylelint.config.js', syntax: 'scss' })
+        new StyleLintPlugin({ configFile: 'stylelint.config.js', syntax: 'scss' }),
+        new webpack.HotModuleReplacementPlugin()
     ],
     externals: {
       angular: true,
